@@ -1,0 +1,18 @@
+// X-Macro file for settings.ini definitions
+// Warning: std::string types must be handled separately in code when printing.
+// format: (cname, ininame, default value)
+
+SETTING_STRING(togglebutton, "ToggleButton", "F1");
+SETTING_STRING(toggleOnlineButton, "ToggleOnlineButton", "F2");
+SETTING_STRING(saveCBRbutton, "SaveCBRbutton", "F8");
+SETTING_STRING(discardCBRbutton, "DiscardCBRbutton", "F9");
+SETTING_INT(renderwidth, "RenderingWidth", "1920");
+SETTING_INT(renderheight, "RenderingHeight", "1080");
+SETTING_INT(menusize, "MenuSize", "2");
+SETTING_BOOL(notifications, "Notifications", "1");
+SETTING_BOOL(checkupdates, "CheckUpdates", "1");
+SETTING_INT(steamdlltype, "SteamDLLType", "0");
+SETTING_STRING(dinputDllWrapper, "DinputDllWrapper", "none");
+SETTING_STRING(ibExec, "InputBridgeExec", "none");
+SETTING_BOOL(ibClose, "CloseIBOnShutdown", "0");
+SETTING_BOOL(disableStateMismatch, "DisableStateMismatch", "0");
