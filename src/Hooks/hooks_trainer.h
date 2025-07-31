@@ -15,3 +15,5 @@ enum AutoBlockType_
 };
 
 bool placeHooks_trainer();
+void disableTrainerHooks();
+void enableTrainerHooks();

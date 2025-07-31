@@ -668,6 +668,7 @@ void __declspec(naked)AutoThrowTech()
 	{
 		popad
 		mov ecx, [g_gameVals.pGlobalThrowFlags]
+		mov ecx, [ecx] //Thanks to Athenya for the fix
 		push eax
 		movzx eax, throwTeched
 		test eax, eax
@@ -1255,4 +1256,70 @@ bool placeHooks_trainer()
 	g_gameVals.pDaredevilCounter = (uint16_t*)HookManager::GetBytesFromAddr("GetDaredevilCounter", 3, 4);
 
 	return true;
+}
+
+void disableTrainerHooks()
+{
+	HookManager::DeactivateHook("DisableHPReduction");
+	HookManager::DeactivateHook("UnlockAllGatlings");
+	HookManager::DeactivateHook("FRCLockout");
+	HookManager::DeactivateHook("JumpCancelAllMoves");
+	HookManager::DeactivateHook("DisableRecovery");
+	HookManager::DeactivateHook("DisableCounterHit");
+	HookManager::DeactivateHook("DisableMistFinerBlock");
+	HookManager::DeactivateHook("AutoGroundGuard");
+	HookManager::DeactivateHook("AutoAirGuard");
+	HookManager::DeactivateHook("AirArmorCheck");
+	HookManager::DeactivateHook("AutoThrowTech");
+	HookManager::DeactivateHook("AutoLateThrowTech");
+	HookManager::DeactivateHook("EnableEnhancedGunflame");
+	HookManager::DeactivateHook("EnablePotemkinGroundDash");
+	HookManager::DeactivateHook("EnablePotemkinAirDash");
+	HookManager::DeactivateHook("AlwaysFDBProjectile");
+	HookManager::DeactivateHook("SetFaustItem");
+	HookManager::DeactivateHook("SetCrowAttack");
+	HookManager::DeactivateHook("EnableJamAutoParry");
+	HookManager::DeactivateHook("EnableSuperArmor");
+	HookManager::DeactivateHook("EnableHyperArmor");
+	HookManager::DeactivateHook("EnableWOL");
+	HookManager::DeactivateHook("EnableMegalomania");
+	HookManager::DeactivateHook("GetMegalomaniaType");
+	HookManager::DeactivateHook("SetZappaSummon");
+	HookManager::DeactivateHook("EnableFlameDistortion");
+	HookManager::DeactivateHook("EnableJusticeGroundDash");
+	HookManager::DeactivateHook("EnableJusticeAirDash");
+	HookManager::DeactivateHook("EnableJusticeTripleJump");
+}
+
+void enableTrainerHooks()
+{
+	HookManager::ActivateHook("DisableHPReduction");
+	HookManager::ActivateHook("UnlockAllGatlings");
+	HookManager::ActivateHook("FRCLockout");
+	HookManager::ActivateHook("JumpCancelAllMoves");
+	HookManager::ActivateHook("DisableRecovery");
+	HookManager::ActivateHook("DisableCounterHit");
+	HookManager::ActivateHook("DisableMistFinerBlock");
+	HookManager::ActivateHook("AutoGroundGuard");
+	HookManager::ActivateHook("AutoAirGuard");
+	HookManager::ActivateHook("AirArmorCheck");
+	HookManager::ActivateHook("AutoThrowTech");
+	HookManager::ActivateHook("AutoLateThrowTech");
+	HookManager::ActivateHook("EnableEnhancedGunflame");
+	HookManager::ActivateHook("EnablePotemkinGroundDash");
+	HookManager::ActivateHook("EnablePotemkinAirDash");
+	HookManager::ActivateHook("AlwaysFDBProjectile");
+	HookManager::ActivateHook("SetFaustItem");
+	HookManager::ActivateHook("SetCrowAttack");
+	HookManager::ActivateHook("EnableJamAutoParry");
+	HookManager::ActivateHook("EnableSuperArmor");
+	HookManager::ActivateHook("EnableHyperArmor");
+	HookManager::ActivateHook("EnableWOL");
+	HookManager::ActivateHook("EnableMegalomania");
+	HookManager::ActivateHook("GetMegalomaniaType");
+	HookManager::ActivateHook("SetZappaSummon");
+	HookManager::ActivateHook("EnableFlameDistortion");
+	HookManager::ActivateHook("EnableJusticeGroundDash");
+	HookManager::ActivateHook("EnableJusticeAirDash");
+	HookManager::ActivateHook("EnableJusticeTripleJump");
 }

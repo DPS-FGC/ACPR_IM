@@ -1,4 +1,5 @@
 #include "TrainerInterface.h"
+#include "Hooks/hooks_trainer.h"
 #include <Core/interfaces.h>
 #include <boost/filesystem.hpp>
 #include <boost/iostreams/filter/gzip.hpp>
@@ -674,6 +675,7 @@ void TrainerInterface::disableTrainer()
 	disabled = true;
 	for (int i = 0; i < trainerItems.size(); i++)
 		trainerItems[i].Disable();
+	disableTrainerHooks();
 }
 
 void TrainerInterface::enableTrainer()
@@ -681,4 +683,5 @@ void TrainerInterface::enableTrainer()
 	disabled = false;
 	for (int i = 0; i < trainerItems.size(); i++)
 		trainerItems[i].Enable();
+	enableTrainerHooks();
 }
