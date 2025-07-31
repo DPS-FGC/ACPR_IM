@@ -1156,8 +1156,8 @@ bool placeHooks_trainer()
 	UnlockAllGatlingsJmpBackAddr = HookManager::SetHook("UnlockAllGatlings", "\x8B\x43\x34\xA9\x00\x10\x00\x00\x74\x28",
 		"xxxxxxxxxx", 8, UnlockAllGatlings, true);
 
-	//FRCLockoutJmpBackAddr = HookManager::SetHook("FRCLockout", "\x8B\x57\x2C\xC6\x42\x29\x05\x0F\xB6\x47\x27",
-	//	"xxxxxxxxxxx", 11, FRCLockout, true);
+	FRCLockoutJmpBackAddr = HookManager::SetHook("FRCLockout", "\x8B\x57\x2C\xC6\x42\x29\x05\x0F\xB6\x47\x27",
+		"xxxxxxxxxxx", 11, FRCLockout, true);
 
 	JumpCancelAllMovesJmpBackAddr = HookManager::SetHook("JumpCancelAllMoves", "\xA9\x00\x00\x04\x00\x74\x11\xF6\x43\x0C\x10",
 		"xxxxxxxxxxx", 5, JumpCancelAllMoves, true);
