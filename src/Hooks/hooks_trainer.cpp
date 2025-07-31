@@ -443,7 +443,6 @@ bool __stdcall SafeHookChecks(byte playerNr, int id)
 DWORD DisableHPReductionJmpBackAddr = 0;
 void __declspec(naked)DisableHPReduction()
 {
-	LOG_ASM(6, "DisableHPReduction\n");
 	__asm
 	{
 		pushad
@@ -468,7 +467,6 @@ void __declspec(naked)DisableHPReduction()
 DWORD UnlockAllGatlingsJmpBackAddr = 0;
 void __declspec(naked)UnlockAllGatlings()
 {
-	LOG_ASM(6, "UnlockAllGatlings\n");
 	__asm
 	{
 		pushad
@@ -493,7 +491,6 @@ void __declspec(naked)UnlockAllGatlings()
 DWORD FRCLockoutJmpBackAddr = 0;
 void __declspec(naked)FRCLockout()
 {
-	LOG_ASM(6, "FRCLockout\n");
 	__asm
 	{
 		mov edx, [edi + 2Ch]
@@ -523,7 +520,6 @@ void __declspec(naked)FRCLockout()
 DWORD JumpCancelAllMovesJmpBackAddr = 0;
 void __declspec(naked)JumpCancelAllMoves()
 {
-	LOG_ASM(6, "JumpCancelAllMoves\n");
 	__asm
 	{
 		pushad
@@ -549,7 +545,6 @@ void __declspec(naked)JumpCancelAllMoves()
 DWORD DisableRecoveryJmpBackAddr = 0;
 void __declspec(naked)DisableRecovery()
 {
-	LOG_ASM(6, "DisableRecovery\n");
 	__asm
 	{
 		pushad
@@ -576,7 +571,6 @@ DWORD DisableCounterHitJmpBackAddr = 0;
 DWORD CheckCounterHitAddr = 0;
 void __declspec(naked)DisableCounterHit()
 {
-	LOG_ASM(6, "DisableCounterHit\n");
 	__asm
 	{
 		call[CheckCounterHitAddr]
@@ -603,7 +597,6 @@ void __declspec(naked)DisableCounterHit()
 DWORD DisableMistFinerBlockJmpBackAddr = 0;
 void __declspec(naked)DisableMistFinerBlock()
 {
-	LOG_ASM(6, "DisableMistFinerBlock\n");
 	reroll = false;
 	test = 1.0;
 	__asm
@@ -617,7 +610,6 @@ DWORD AutoGroundGuardJmpBackAddr = 0;
 DWORD FailedGroundGuardJmpAddr = 0;
 void __declspec(naked)AutoGroundGuard()
 {
-	LOG_ASM(6, "AutoGroundGuard\n");
 	__asm
 	{
 		pushad
@@ -643,7 +635,6 @@ DWORD AutoAirGuardJmpBackAddr = 0;
 DWORD FailedAirGuardJmpAddr = 0;
 void __declspec(naked)AutoAirGuard()
 {
-	LOG_ASM(6, "AutoAirGuard\n");
 	__asm
 	{
 		pushad
@@ -669,7 +660,6 @@ DWORD AutoThrowTechJmpBackAddr = 0;
 bool throwTeched = false;
 void __declspec(naked)AutoThrowTech()
 {
-	LOG_ASM(6, "AutoThrowTech\n");
 	_asm pushad
 
 	throwTeched = SafeHookChecks(-1, 6);
@@ -694,7 +684,6 @@ void __declspec(naked)AutoThrowTech()
 DWORD AutoLateThrowTechJmpBackAddr = 0;
 void __declspec(naked)AutoLateThrowTech()
 {
-	LOG_ASM(6, "AutoLateThrowTech\n");
 	__asm
 	{
 		pushad
@@ -718,7 +707,6 @@ DWORD AirArmorCheckJmpBackAddr = 0;
 DWORD AirArmorJumpAddr = 0;
 void __declspec(naked)AirArmorCheck()
 {
-	LOG_ASM(6, "AirArmorCheck\n");
 	__asm
 	{
 		push eax
@@ -749,7 +737,6 @@ DWORD CheckSolBossModeAddr = 0;
 DWORD DIGunFlameAddr = 0;
 void __declspec(naked)EnableEnhancedGunflame()
 {
-	LOG_ASM(6, "EnableEnhancedGunflame\n");
 	__asm
 	{
 		pushad
@@ -792,7 +779,6 @@ void __declspec(naked)EnableEnhancedGunflame()
 DWORD EnablePotemkinGroundDashJmpBackAddr = 0;
 void __declspec(naked)EnablePotemkinGroundDash()
 {
-	LOG_ASM(6, "EnablePotemkinGroundDash\n");
 	__asm
 	{
 		pushad
@@ -815,7 +801,6 @@ void __declspec(naked)EnablePotemkinGroundDash()
 DWORD EnablePotemkinAirDashJmpBackAddr = 0;
 void __declspec(naked)EnablePotemkinAirDash()
 {
-	LOG_ASM(6, "EnablePotemkinAirDash\n");
 	__asm
 	{
 		pushad
@@ -839,7 +824,6 @@ void __declspec(naked)EnablePotemkinAirDash()
 DWORD AlwaysFDBProjectileJmpBackAddr = 0;
 void __declspec(naked)AlwaysFDBProjectile()
 {
-	LOG_ASM(6, "AlwaysFDBProjectile\n");
 	__asm
 	{
 		pushad
@@ -874,7 +858,6 @@ byte itemCode = 0;
 DWORD SetFaustItemJmpBackAddr = 0;
 void __declspec(naked)SetFaustItem()
 {
-	LOG_ASM(6, "SetFaustItem\n");
 	__asm
 	{
 		pushad
@@ -921,7 +904,6 @@ bool __stdcall HandleSetCrowAttack(byte playerNr, int offset, byte& outAttack, b
 DWORD SetCrowAttackJmpBackAddr = 0;
 void __declspec(naked)SetCrowAttack()
 {
-	LOG_ASM(6, "SetCrowAttack\n");
 	int arrayoffset;
 	DWORD address, backup;
 	byte nextAttack;
@@ -964,7 +946,6 @@ void __declspec(naked)SetCrowAttack()
 DWORD EnableWOLJmpBackAddr = 0;
 void __declspec(naked)EnableWOL()
 {
-	LOG_ASM(6, "EnableWOL\n");
 	__asm
 	{
 		push eax
@@ -1001,7 +982,6 @@ void __declspec(naked)EnableWOL()
 DWORD EnableMegalomaniaJmpBackAddr = 0;
 void __declspec(naked)EnableMegalomania()
 {
-	LOG_ASM(6, "EnableMegalomania\n");
 	__asm
 	{
 		pushad
@@ -1029,7 +1009,6 @@ int getZappaSummonType(byte playerNr) {
 DWORD SetZappaSummonJmpBackAddr = 0;
 void __declspec(naked)SetZappaSummon()
 {
-	LOG_ASM(6, "SetZappaSummon\n");
 	__asm
 	{
 		pushad
@@ -1054,7 +1033,6 @@ void __declspec(naked)SetZappaSummon()
 DWORD EnableFlameDistortionJmpBackAddr = 0;
 void __declspec(naked)EnableFlameDistortion()
 {
-	LOG_ASM(6, "EnableFlameDistortion\n");
 	__asm
 	{
 		pushad
@@ -1077,7 +1055,6 @@ void __declspec(naked)EnableFlameDistortion()
 DWORD EnableJusticeGroundDashJmpBackAddr = 0;
 void __declspec(naked)EnableJusticeGroundDash()
 {
-	LOG_ASM(6, "EnableJusticeGroundDash\n");
 	__asm
 	{
 		pushad
@@ -1101,7 +1078,6 @@ void __declspec(naked)EnableJusticeGroundDash()
 DWORD EnableJusticeAirDashJmpBackAddr = 0;
 void __declspec(naked)EnableJusticeAirDash()
 {
-	LOG_ASM(6, "EnableJusticeAirDash\n");
 	__asm
 	{
 		pushad
@@ -1125,7 +1101,6 @@ void __declspec(naked)EnableJusticeAirDash()
 DWORD EnableJusticeTripleJumpJmpBackAddr = 0;
 void __declspec(naked)EnableJusticeTripleJump()
 {
-	LOG_ASM(6, "EnableJusticeTripleJump\n");
 	__asm
 	{
 		pushad
@@ -1304,12 +1279,8 @@ void disableTrainerHooks()
 	HookManager::DeactivateHook("AlwaysFDBProjectile");
 	HookManager::DeactivateHook("SetFaustItem");
 	HookManager::DeactivateHook("SetCrowAttack");
-	HookManager::DeactivateHook("EnableJamAutoParry");
-	HookManager::DeactivateHook("EnableSuperArmor");
-	HookManager::DeactivateHook("EnableHyperArmor");
 	HookManager::DeactivateHook("EnableWOL");
 	HookManager::DeactivateHook("EnableMegalomania");
-	HookManager::DeactivateHook("GetMegalomaniaType");
 	HookManager::DeactivateHook("SetZappaSummon");
 	HookManager::DeactivateHook("EnableFlameDistortion");
 	HookManager::DeactivateHook("EnableJusticeGroundDash");
@@ -1337,12 +1308,8 @@ void enableTrainerHooks()
 	HookManager::ActivateHook("AlwaysFDBProjectile");
 	HookManager::ActivateHook("SetFaustItem");
 	HookManager::ActivateHook("SetCrowAttack");
-	HookManager::ActivateHook("EnableJamAutoParry");
-	HookManager::ActivateHook("EnableSuperArmor");
-	HookManager::ActivateHook("EnableHyperArmor");
 	HookManager::ActivateHook("EnableWOL");
 	HookManager::ActivateHook("EnableMegalomania");
-	HookManager::ActivateHook("GetMegalomaniaType");
 	HookManager::ActivateHook("SetZappaSummon");
 	HookManager::ActivateHook("EnableFlameDistortion");
 	HookManager::ActivateHook("EnableJusticeGroundDash");
