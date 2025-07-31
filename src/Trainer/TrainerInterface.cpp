@@ -104,7 +104,7 @@ void TrainerInterface::initializeTrainer()
 				g_interfaces.GetPlayer(playerNr)->GetData()->extraData->projectileFlag = 0x00;
 		});
 	trainerItems.emplace_back("Always FRC:", 2, "ge:AlwaysFRC", TrainerItemType_Bool,
-		"Allows performing FRC at any point.", false, [](uint8_t flags, bool active, int playerNr) {
+		"Allows performing FRC at any point. Note: Performing too many FRC's in a short time span can crash the game.", false, [](uint8_t flags, bool active, int playerNr) {
 			if (active)	g_interfaces.GetPlayer(playerNr)->GetData()->extraData->FRCTimer = 0x05;
 		});
 	trainerItems.emplace_back("Poison state:", 2, "ge:Poison", TrainerItemType_Bool,

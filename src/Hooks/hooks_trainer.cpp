@@ -25,6 +25,11 @@ bool checkUnlockAllGatlings(byte playerNr)
 	return g_interfaces.trainerInterface.GetItem("ge:UnGatling")->GetBool(playerNr);
 }
 
+bool checkAlwaysFRC(byte playerNr)
+{
+	return g_interfaces.trainerInterface.GetItem("ge:AlwaysFRC")->GetBool(playerNr);
+}
+
 bool checkWhiffGatlings(byte playerNr)
 {
 	return g_interfaces.trainerInterface.GetItem("ge:WhiffGatling")->GetBool(playerNr);
@@ -426,6 +431,8 @@ bool __stdcall SafeHookChecks(byte playerNr, int id)
 		}
 		return disableCH;
 		break;
+	case 22:
+		return checkAlwaysFRC(playerNr);
 	default:
 		return false;
 		break;
@@ -477,6 +484,35 @@ void __declspec(naked)UnlockAllGatlings()
 		//mov eax, [edx + 74h]
 		//mov ecx, ebx
 		jmp[UnlockAllGatlingsJmpBackAddr]
+	}
+
+}
+
+DWORD FRCLockoutJmpBackAddr = 0;
+void __declspec(naked)FRCLockout()
+{
+	__asm
+	{
+		mov edx, [edi + 2Ch]
+		mov byte ptr [edx+29h], 05
+		movzx eax, byte ptr [edi+27h]
+		mov playerNr, al
+		pushad
+	}
+
+	activate = SafeHookChecks(playerNr, 22);
+
+	__asm
+	{
+		popad
+		push eax
+		movzx eax, activate
+		test eax, eax
+		pop eax
+		jne EXIT
+		mov byte ptr [edx+33], 0Ah   //Add 10 frames of roman cancel lockout to avoid crashing the game when mashing FRC
+	EXIT:
+		jmp[FRCLockoutJmpBackAddr]
 	}
 
 }
@@ -1092,6 +1128,9 @@ bool placeHooks_trainer()
 
 	UnlockAllGatlingsJmpBackAddr = HookManager::SetHook("UnlockAllGatlings", "\x8B\x43\x34\xA9\x00\x10\x00\x00\x74\x28",
 		"xxxxxxxxxx", 8, UnlockAllGatlings, true);
+
+	FRCLockoutJmpBackAddr = HookManager::SetHook("FRCLockout", "\x8B\x57\x2C\xC6\x42\x29\x05\x0F\xB6\x47\27",
+		"xxxxxxxxxxx", 11, FRCLockout, true);
 
 	JumpCancelAllMovesJmpBackAddr = HookManager::SetHook("JumpCancelAllMoves", "\xA9\x00\x00\x04\x00\x74\x11\xF6\x43\x0C\x10",
 		"xxxxxxxxxxx", 5, JumpCancelAllMoves, true);
