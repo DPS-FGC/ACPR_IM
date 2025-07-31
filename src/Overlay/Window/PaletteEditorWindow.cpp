@@ -363,9 +363,9 @@ void PaletteEditorWindow::SavePaletteToFile()
 	struct TextFilters { static int FilterAllowedChars(ImGuiTextEditCallbackData* data) { if (data->EventChar < 256 && strchr(" qwertzuiopasdfghjklyxcvbnmQWERTZUIOPASDFGHJKLYXCVBNM0123456789_.()[]!@&+-'^,;{}$=", (char)data->EventChar)) return 0; return 1; } };
 
 
-	//ImGui::Checkbox("Save with bloom effect", &palBoolEffect);
-	//ImGui::HoverTooltip("Bloom effects cannot be changed until a new round is started");
-	//ImGui::Spacing();
+	ImGui::Checkbox("Save with bloom effect", &palBoolEffect);
+	ImGui::HoverTooltip("Bloom effects cannot be changed until a new round is started");
+	ImGui::Spacing();
 
 	ImGui::Text("Palette name:");
 	ImGui::PushItemWidth(250);
