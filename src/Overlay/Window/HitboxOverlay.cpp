@@ -75,7 +75,7 @@ void HitboxOverlay::Draw()
 		bool isEntityActive = pEntity->charIndex > 0;
 		while (isEntityActive)
 		{
-			if (IsOwnerEnabled(pEntity->parent))
+			if (IsOwnerEnabled(pEntity->playerID))
 			{
 				entityWorldPos = CalculateObjWorldPosition(pEntity);
 				DrawCollisionAreas(pEntity, entityWorldPos);
@@ -401,11 +401,11 @@ void HitboxOverlay::DrawFrameMeterLegend()
 	}
 }
 
-bool HitboxOverlay::IsOwnerEnabled(CharData* ownerCharInfo)
+bool HitboxOverlay::IsOwnerEnabled(byte playerID)
 {
 	for (int i = 0; i < 2; i++)
 	{
-		if (ownerCharInfo == g_interfaces.GetPlayer(i)->GetData())
+		if (playerID == i)
 		{
 			return drawCharacterHitbox[i];
 		}

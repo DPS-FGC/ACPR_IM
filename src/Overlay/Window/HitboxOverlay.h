@@ -43,7 +43,7 @@ private:
 	Hitbox GetPlayerPushBox(const CharData* charObj);
 	Hitbox GetPlayerThrowBox(const CharData* charObj);
 
-	bool IsOwnerEnabled(CharData* ownerCharInfo);
+	bool IsOwnerEnabled(byte playerID);
 	bool WorldToScreen(LPDIRECT3DDEVICE9 pDevice, D3DXMATRIX* view, D3DXMATRIX* proj, D3DXVECTOR3* pos, D3DXVECTOR3* out);
 	ImVec2 WorldToPixel(ImVec2 worldPos);
 	ImVec2 PixelToScreen(ImVec2 pixelPos);
