@@ -79,10 +79,20 @@ void RoomManager::AcknowledgeSpectate(Packet* packet)
 		GetThisPlayerMatchPlayerIndex());
 	m_pNetworkManager->SendPacket(&otherPlayer.steamID, &ackPacket);
 
-	strcpy(name, GetPlayerSteamName(GetOpponentRoomMemberEntry()->steamId));
-	ackPacket = Packet((void*)name, strlen(name), PacketType_IMID_PlayerInfo, GetOpponentRoomMemberEntry()->steamId, 1,
-		GetOpponentRoomMemberEntry()->matchPlayerIndex);
-	m_pNetworkManager->SendPacket(&otherPlayer.steamID, &ackPacket);
+	uint64_t opponentID = GetOpponentRoomMemberEntry()->steamId;
+	for (const IMPlayer& imPlayer : GetIMPlayersInCurrentMatch())
+	{
+		if (!imPlayer.active || IsThisPlayer(imPlayer.steamID.ConvertToUint64()))
+			continue;
+
+		if (imPlayer.steamID == opponentID)
+		{
+			strcpy(name, GetPlayerSteamName(GetOpponentRoomMemberEntry()->steamId));
+			ackPacket = Packet((void*)name, strlen(name), PacketType_IMID_PlayerInfo, GetOpponentRoomMemberEntry()->steamId, 1,
+				GetOpponentRoomMemberEntry()->matchPlayerIndex);
+			m_pNetworkManager->SendPacket(&otherPlayer.steamID, &ackPacket);
+		}
+	}
 
 	int i = 2;
 	for (const IMPlayer& imPlayer : m_imSpectators)
@@ -96,7 +106,7 @@ void RoomManager::AcknowledgeSpectate(Packet* packet)
 
 	for (IMPlayer& imPlayer : GetIMPlayersInCurrentMatch())
 	{
-		if (IsThisPlayer(imPlayer.steamID.ConvertToUint64()))
+		if (!imPlayer.active || IsThisPlayer(imPlayer.steamID.ConvertToUint64()) || imPlayer.steamID == opponentID)
 			continue;
 		strcpy(name, imPlayer.steamName.c_str());
 		ackPacket = Packet((void*)name, strlen(name), PacketType_IMID_PlayerInfo, otherPlayer.steamID.ConvertToUint64(), 0, 2);
