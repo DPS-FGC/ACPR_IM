@@ -47,7 +47,7 @@ void RoomManager::SendAcknowledge(Packet* packet)
 {
 	LOG(2, "RoomManager::SendAcknowledge\n");
 
-	IMPlayer otherPlayer = IMPlayer(packet->steamID, (const char*)packet->data);
+	IMPlayer otherPlayer = IMPlayer(packet->steamID, (const char*)packet->data, packet->dataSize);
 	AddIMPlayerToRoom(otherPlayer);
 
 	char name[32];
@@ -60,7 +60,7 @@ void RoomManager::AcceptAcknowledge(Packet* packet)
 {
 	LOG(2, "RoomManager::AcceptAcknowledge\n");
 
-	IMPlayer otherPlayer = IMPlayer(packet->steamID, (const char*)packet->data);
+	IMPlayer otherPlayer = IMPlayer(packet->steamID, (const char*)packet->data, packet->dataSize);
 	AddIMPlayerToRoom(otherPlayer);
 }
 
@@ -71,7 +71,7 @@ void RoomManager::AcknowledgeSpectate(Packet* packet)
 	if (IsThisPlayer(packet->steamID))
 		return;
 
-	IMPlayer otherPlayer = IMPlayer(packet->steamID, (const char*)packet->data);
+	IMPlayer otherPlayer = IMPlayer(packet->steamID, (const char*)packet->data, packet->dataSize);
 
 	char name[32];
 	strcpy(name, GetThisPlayerSteamName());
@@ -111,7 +111,7 @@ void RoomManager::RecvPlayerInfo(Packet* packet)
 {
 	LOG(2, "RoomManager::RecvPlayerInfo\n");
 
-	IMPlayer otherPlayer = IMPlayer(packet->steamID, (const char*)packet->data);
+	IMPlayer otherPlayer = IMPlayer(packet->steamID, (const char*)packet->data, packet->dataSize);
 	otherPlayer.matchPlayerIndex = packet->matchIndex;
 
 	AddIMPlayerToSpectators(otherPlayer);
@@ -133,7 +133,7 @@ void RoomManager::JoinRoom()
 	m_imPlayers.clear();
 	m_imPlayers.resize(g_gameVals.pRoom->capacity);
 
-	IMPlayer thisPlayer = IMPlayer(m_thisPlayerSteamID.ConvertToUint64(), GetPlayerSteamName(m_thisPlayerSteamID.ConvertToUint64()));
+	IMPlayer thisPlayer = IMPlayer(m_thisPlayerSteamID.ConvertToUint64(), GetPlayerSteamName(m_thisPlayerSteamID.ConvertToUint64()), 32);
 	AddIMPlayerToRoom(thisPlayer);
 
 	SendAnnounce();
@@ -222,7 +222,7 @@ bool RoomManager::IsPacketFromSameRoom(Packet* packet) const
 	if (!IsRoomFunctional())
 		return false;
 
-	return IsPlayerInRoom(IMPlayer(packet->steamID, GetPlayerSteamName(packet->steamID)));
+	return IsPlayerInRoom(IMPlayer(packet->steamID, GetPlayerSteamName(packet->steamID), 32));
 }
 
 bool RoomManager::IsPacketFromSameMatchNonSpectator(Packet* packet) const
@@ -433,6 +433,7 @@ void RoomManager::AddIMPlayerToRoom(const IMPlayer& imPlayer)
 	
 	if (first_free_idx >= 0)
 		m_imPlayers[first_free_idx] = imPlayer;
+	LOG(3, "Add new IMPlayer at %d: %s\n", first_free_idx, imPlayer.steamName.c_str());
 }
 
 void RoomManager::AddIMPlayerToSpectators(const IMPlayer& imPlayer)

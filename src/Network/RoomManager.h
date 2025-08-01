@@ -20,9 +20,9 @@ struct IMPlayer
 	{
 	}
 
-	IMPlayer(uint64_t steamID, const char* steamName)
+	IMPlayer(uint64_t steamID, const char* steamName, uint16_t nameLength)
 		: steamID(steamID),
-		steamName(steamName), matchPlayerIndex(-1)
+		steamName(std::string(steamName, nameLength)), matchPlayerIndex(-1)
 	{
 		active = true;
 	}

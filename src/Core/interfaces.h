@@ -78,7 +78,8 @@ struct gameVals_t
 
 	uint8_t GetGameMode()
 	{
-		if ((uint8_t)*pGameMode == GameMode_Online)
+		if ((uint8_t)*pGameMode == GameMode_Online ||
+			(*pGameMode & 0x01010000) == 0x01010000) //Check if in online mode
 		{
 			if (g_interfaces.pRoomManager->IsRoomFunctional())
 			{
@@ -102,6 +103,10 @@ struct gameVals_t
 		//Check for special case when loading replay from .ggr file directly
 		if (*pGameMode == 0 && pGameScreen != NULL && !strcmp(pGameScreen, "RPPB"))
 			return GameMode_ReplayTheater;
+		//This check is more robust, since entering online mode through steam invitation
+		//skips the main menu and doesn't modify the last byte of pGameMode.
+		if ((*pGameMode & 0x01010000) == 0x01010000)
+			return GameMode_Online;
 		return (uint8_t)*pGameMode;
 	}
 
