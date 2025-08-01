@@ -547,6 +547,11 @@ void HitboxOverlay::DrawCollisionAreas(const CharData* charObj, const ImVec2 pla
 		pointC = CalculateScreenPosition(pointC);
 		pointD = CalculateScreenPosition(pointD);
 
+		pointA = ImVec2(pointA.x + m_rectThickness / 2.0, pointA.y + m_rectThickness / 2.0);
+		pointB = ImVec2(pointB.x - m_rectThickness / 2.0, pointB.y + m_rectThickness / 2.0);
+		pointC = ImVec2(pointC.x - m_rectThickness / 2.0, pointC.y - m_rectThickness / 2.0);
+		pointD = ImVec2(pointD.x + m_rectThickness / 2.0, pointD.y - m_rectThickness / 2.0);
+
 		const unsigned int colorGreen = 0xFF00FF00;
 		const unsigned int colorRed = 0xFFFF0000;
 		const unsigned int rectBorderColor = entry.type == HitboxType_Hurtbox ? colorGreen : colorRed;
@@ -656,6 +661,11 @@ void HitboxOverlay::DrawPlayerPushboxes(const CharData* charObj)
 	pointC = CalculateScreenPosition(pointC);
 	pointD = CalculateScreenPosition(pointD);
 
+	pointA = ImVec2(pointA.x + m_rectThickness / 2.0, pointA.y + m_rectThickness / 2.0);
+	pointB = ImVec2(pointB.x - m_rectThickness / 2.0, pointB.y + m_rectThickness / 2.0);
+	pointC = ImVec2(pointC.x - m_rectThickness / 2.0, pointC.y - m_rectThickness / 2.0);
+	pointD = ImVec2(pointD.x + m_rectThickness / 2.0, pointD.y - m_rectThickness / 2.0);
+
 	const unsigned int colorCollision = 0xFF00FFFF;
 
 	RenderRect(pointA, pointB, pointC, pointD, colorCollision, m_rectThickness);
@@ -728,6 +738,11 @@ void HitboxOverlay::DrawPlayerGrabBox(const CharData* charObj, bool drawOverride
 		pointC = CalculateScreenPosition(pointC);
 		pointD = CalculateScreenPosition(pointD);
 
+		pointA = ImVec2(pointA.x + m_rectThickness / 2.0, pointA.y + m_rectThickness / 2.0);
+		pointB = ImVec2(pointB.x - m_rectThickness / 2.0, pointB.y + m_rectThickness / 2.0);
+		pointC = ImVec2(pointC.x - m_rectThickness / 2.0, pointC.y - m_rectThickness / 2.0);
+		pointD = ImVec2(pointD.x + m_rectThickness / 2.0, pointD.y - m_rectThickness / 2.0);
+
 		const unsigned int colorGrab = 0xFFFF00FF;
 
 		RenderRect(pointA, pointB, pointC, pointD, colorGrab, m_rectThickness);
@@ -767,6 +782,11 @@ bool HitboxOverlay::DrawPlayerCommandGrabBox(const CharData* charObj)
 		pointB = CalculateScreenPosition(pointB);
 		pointC = CalculateScreenPosition(pointC);
 		pointD = CalculateScreenPosition(pointD);
+
+		pointA = ImVec2(pointA.x + m_rectThickness / 2.0, pointA.y + m_rectThickness / 2.0);
+		pointB = ImVec2(pointB.x - m_rectThickness / 2.0, pointB.y + m_rectThickness / 2.0);
+		pointC = ImVec2(pointC.x - m_rectThickness / 2.0, pointC.y - m_rectThickness / 2.0);
+		pointD = ImVec2(pointD.x + m_rectThickness / 2.0, pointD.y - m_rectThickness / 2.0);
 
 		const unsigned int colorGrab = 0xFFFF00FF;
 
