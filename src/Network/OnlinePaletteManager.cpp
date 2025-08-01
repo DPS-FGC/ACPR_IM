@@ -56,6 +56,7 @@ void OnlinePaletteManager::RecvPaletteDataPacket(Packet* packet)
 	{
 		m_pPaletteManager->ReplacePaletteFile((const char*)packet->data, (PaletteFile)packet->part, charPalHandle);
 		SaveRecievedPaletteToFile(charPalHandle, m_charIndices[matchPlayerIndex], packet->steamID);
+		m_recievedPalette = true;
 	}
 }
 
@@ -99,11 +100,19 @@ void OnlinePaletteManager::OnMatchInit(CharIndex p1Idx, CharIndex p2Idx)
 {
 	LOG(2, "OnlinePaletteManager::OnMatchInit\n");
 
+	m_recievedPalette = false;
+
 	m_charIndices[0] = p1Idx;
 	m_charIndices[1] = p2Idx;
 
 	SendPalettePackets();
 	ProcessSavedPalettePackets();
+}
+
+void OnlinePaletteManager::OnMatchEnd()
+{
+	if (m_recievedPalette)
+		m_pPaletteManager->ReloadAllPalettes();
 }
 
 void OnlinePaletteManager::SendPaletteInfoPacket(CharPaletteHandle& charPalHandle, uint64_t steamID)

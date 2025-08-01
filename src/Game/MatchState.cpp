@@ -129,6 +129,7 @@ void MatchState::OnMatchEnd()
 
 		g_interfaces.pRoomManager->AnnounceLeave();
 		g_interfaces.pRoomManager->OnMatchEnd();
+		g_interfaces.pOnlinePaletteManager->OnMatchEnd();
 	}
 
 	g_interfaces.pPaletteManager->OnMatchEnd(

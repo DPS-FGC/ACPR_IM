@@ -19,6 +19,7 @@ public:
 	void ProcessSavedPalettePackets();
 	void ClearSavedPalettePacketQueues();
 	void OnMatchInit(CharIndex p1Idx, CharIndex p2Idx);
+	void OnMatchEnd();
 	bool* GetSharePalettesOnlineRef();
 
 private:
@@ -60,6 +61,7 @@ private:
 	std::queue<UnprocessedPaletteFile> m_unprocessedPaletteFiles;
 	std::array<CharIndex, 2> m_charIndices;
 	bool m_sharePalettesOnline = true;
+	bool m_recievedPalette = false;
 
 	CharPaletteHandle* m_pP1CharPalHandle;
 	CharPaletteHandle* m_pP2CharPalHandle;
