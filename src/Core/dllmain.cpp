@@ -2,6 +2,7 @@
 #include "interfaces.h"
 #include "logger.h"
 #include "Settings.h"
+#include "utils.h"
 
 #include "Hooks/hooks_detours.h"
 #include "Overlay/WindowManager.h"
@@ -37,6 +38,8 @@ void CreateCustomDirectories()
 
 	CreateDirectory(L"ACPR_IM", NULL);
 }
+
+
 
 DWORD GetIBProcessID()
 {
@@ -171,6 +174,13 @@ DWORD WINAPI ACPR_IM_Start(HMODULE hModule)
 	openLogger();
 
 	LOG(1, "Starting ACPR_IM_Start thread\n");
+
+	//Check for game executable in working directory. This will fail when running game from a .ggr file
+	//for the first time, but will succeed when launched from steam after confirming launch arguments
+	if (!CheckGameExecutable())
+	{
+		return 1;
+	}
 
 	CreateCustomDirectories();
 	SetUnhandledExceptionFilter(UnhandledExFilter);

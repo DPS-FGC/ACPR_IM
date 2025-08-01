@@ -3,6 +3,24 @@
 #include <cstdio>
 #include <fstream>
 #include <Psapi.h>
+#include <tchar.h>
+
+bool CheckGameExecutable()
+{
+	const TCHAR* gameExe = _T("GGXXACPR_Win.exe");
+
+	TCHAR path[MAX_PATH];
+	GetCurrentDirectory(MAX_PATH, path);
+
+	TCHAR fullPath[MAX_PATH];
+	_stprintf_s(fullPath, _T("%s\\%s"), path, gameExe);
+
+	DWORD attr = GetFileAttributes(fullPath);
+	if (attr == INVALID_FILE_ATTRIBUTES || (attr & FILE_ATTRIBUTE_DIRECTORY))
+		return false;
+
+	return true;
+}
 
 void WriteToProtectedMemory(uintptr_t addressToWrite, char* valueToWrite, int byteNum)
 {

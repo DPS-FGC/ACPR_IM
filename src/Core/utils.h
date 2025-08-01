@@ -16,6 +16,7 @@ char* RawMemoryArrayToString(unsigned char* srcBuf, int length);
 DWORD FindPattern(LPCWSTR module, char *pattern, char *mask);
 DWORD* GetInterfaceFuncPtr(DWORD* pDeviceInterface, const char *fmt, ...);
 bool Hook(void* toHook, void* ourFunc, int len);
+bool CheckGameExecutable();
 
 std::string FormatText(const char* message, ...);
 unsigned int rgb(double hue);

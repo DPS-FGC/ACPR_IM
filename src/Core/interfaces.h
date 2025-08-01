@@ -99,6 +99,9 @@ struct gameVals_t
 				}
 			}
 		}
+		//Check for special case when loading replay from .ggr file directly
+		if (*pGameMode == 0 && pGameScreen != NULL && !strcmp(pGameScreen, "RPPB"))
+			return GameMode_ReplayTheater;
 		return (uint8_t)*pGameMode;
 	}
 

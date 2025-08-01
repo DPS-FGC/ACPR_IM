@@ -175,6 +175,13 @@ bool CbrInterface::isAnyPlayingReversalReplays() {
 }
 CbrInterface::CbrInterface()
 {
+	//Check for game executable in working directory. This will fail when running game from a .ggr file
+	//for the first time, but will succeed when launched from steam after confirming launch arguments
+	if (!CheckGameExecutable())
+	{
+		return;
+	}
+
 	//loadSettings(this);
 	FILE* leakReportFile = fopen("leak_report.txt", "w");
 	if (!leakReportFile) {
