@@ -138,7 +138,7 @@ bool WindowManager::Initialize(void *hwnd, IDirect3DDevice9 *device)
 
 	srand(time(NULL));
 
-	//StartAsyncUpdateCheck();
+	StartAsyncUpdateCheck();
 
 	std::string notificationText = MOD_WINDOW_TITLE;
 	notificationText += " ";

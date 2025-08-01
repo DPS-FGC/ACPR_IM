@@ -55,7 +55,7 @@ void CheckUpdate()
 
 
 		LOG(2, "New version found: %s\n", newVersionNum.c_str());
-		g_imGuiLogger->Log("[system] Update available: BBCF Improvement Mod %s has been released!(current: %s)\n",
+		g_imGuiLogger->Log("[system] Update available: ACPR Improvement Mod %s has been released!(current: %s)\n",
 			newVersionNum.c_str(), MOD_VERSION_NUM);
 
 		WindowManager::GetInstance().GetWindowContainer()->GetWindow(WindowType_UpdateNotifier)->Open();

@@ -92,7 +92,7 @@ void MainWindow::Draw()
 	ImGui::VerticalSpacing(5);
 
 	DrawCurrentPlayersCount();
-	//DrawLinkButtons();
+	DrawLinkButtons();
 }
 
 void MainWindow::DrawUtilButtons() const
@@ -276,16 +276,16 @@ void MainWindow::DrawHitboxOverlaySection() const
 
 void MainWindow::DrawLinkButtons() const
 {
-	if (ImGui::Button("AI Filehost"))
-	{
-		m_pWindowContainer->GetWindow(WindowType_CbrServer)->ToggleOpen();
-	}ImGui::SameLine();
-	ImGui::ButtonUrl("Discord", MOD_LINK_DISCORD, BTN_SIZE);
+	//if (ImGui::Button("AI Filehost"))
+	//{
+	//	m_pWindowContainer->GetWindow(WindowType_CbrServer)->ToggleOpen();
+	//}ImGui::SameLine();
+	//ImGui::ButtonUrl("Discord", MOD_LINK_DISCORD, BTN_SIZE);
 
-	ImGui::SameLine();
-	ImGui::ButtonUrl("Forum", MOD_LINK_FORUM, BTN_SIZE);
+	//ImGui::SameLine();
+	//ImGui::ButtonUrl("Forum", MOD_LINK_FORUM, BTN_SIZE);
 
-	ImGui::SameLine();
+	//ImGui::SameLine();
 	ImGui::ButtonUrl("GitHub", MOD_LINK_GITHUB, BTN_SIZE);
 }
 
