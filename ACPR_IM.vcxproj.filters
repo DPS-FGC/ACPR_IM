@@ -227,6 +227,7 @@
     <ClInclude Include="src\Game\Room\Room.h" />
     <ClInclude Include="src\Game\Room\RoomMemberEntry.h" />
     <ClInclude Include="src\Network\Packet.h" />
+    <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="export\dinput8.def">
@@ -237,5 +238,8 @@
     </None>
     <None Include="src\Core\settings.def" />
     <None Include="resource\palettes.ini" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="ACPR_IM.rc" />
   </ItemGroup>
 </Project>

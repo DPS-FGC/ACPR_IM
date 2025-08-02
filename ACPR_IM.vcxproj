@@ -70,6 +70,7 @@
     <ClCompile Include="src\Trainer\CharacterStylishCombos.cpp" />
     <ClCompile Include="src\Trainer\StylishModeManager.cpp" />
     <ClCompile Include="src\Trainer\StylishComboItem.cpp" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="src\Game\Room\Room.h" />
     <ClInclude Include="src\Game\Room\RoomMemberEntry.h" />
     <ClInclude Include="src\Network\Packet.h" />
@@ -174,6 +175,9 @@
       <DeploymentContent>false</DeploymentContent>
     </None>
     <None Include="src\Core\settings.def" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="ACPR_IM.rc" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{CB50353A-2EC9-4D1C-89C6-65A621C335C5}</ProjectGuid>
