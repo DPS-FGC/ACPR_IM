@@ -63,7 +63,7 @@ void CheckUpdate()
 	else
 	{
 		newVersionNum = m[1].str();
-		g_imGuiLogger->Log("[system] BBCF Improvement Mod is up-to-date, current: %s, latest: %s\n",
+		g_imGuiLogger->Log("[system] ACPR Improvement Mod is up-to-date, current: %s, latest: %s\n",
 			MOD_VERSION_NUM, newVersionNum.c_str()
 		);
 	}
