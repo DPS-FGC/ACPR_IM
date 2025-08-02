@@ -55,6 +55,8 @@ The trainer features are separated into multiple categories:
 Custom settings can be saved to and loaded from trainer configuration files.  
 The trainer is disabled in online/replay modes as it causes desyncs.
 
+**NOTE**: The trainer is experimental and may break the game if too many options are used in combination. Use with caution.
+
 ### Custom palettes
 Allows changing color palettes without external file modifications (e.g. palmod).
 Click on the `Player1/2` buttons to choose from available custom palettes.
@@ -102,7 +104,7 @@ To play against the AI:
 
 **NOTE**: If the AI gets hit a lot in neutral / wakeup, using the automatic defence options with custom probabilities from the trainer can be used to make it more/less challenging.
 
-### Online features (EXPERIMENTAL!)
+### Online features
 Clicking on the `Online` button (can be toggled with F2) while in an online game room (private room or quick match), will show avilable improvement
 mod users.
 Custom palettes will be shared online between improvement mod users (whether players or spectators).
@@ -121,9 +123,6 @@ by the mod to enable custom palettes in replay mode. They should have the same n
 loaded correctly.
 The .prep files can be organized into subfolders inside ACPR_IM/Replays.
 
-**IMPORTANT**: This mode is still experimental and might occasionally cause desyncs and, in rare cases, wrong palette colors.
-An older offline-only build is available in the releases section. Use it if the online version has noticable effects on the gameplay.
-
 **Note**: Custom palette sharing is not supported in Team vs modes (offline and online). Automatic spectating is also not
 currently supported.
 
@@ -141,7 +140,10 @@ To disable the mod simply rename or delete dinput8.dll.
 ## Troubleshooting
 If the game crashes, or any other weird behavior occurs in game, try removing the mod. If the problem persists then it is
 unrelated to the mod.
-If the game crashes when entering an online lobby, make sure the correct SteamDLLType is chosen in `settings.ini` (see Installation section).
+If the game crashes when entering an online lobby, make sure the correct SteamDLLType is chosen in `settings.ini` (see Installation section).  
+If the game crashes on launch with the mod make sure:  
+	a. The game is run from it's native working directory (where GGXXACPR_Win.exe is located). Custom launchers or wrappers might affect this.
+	b. Install the latest version of [Visual C++ Runtime](https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist?view=msvc-170).
 
 ## Compiling
 This mod was compiled using Microsoft Visual Studio 2022 (toolset v143).  
@@ -156,6 +158,7 @@ This mod would not be possible without the original creators of BBCF-Improvement
 The user interface of the mod is based on [Dear ImGui](https://github.com/ocornut/imgui).
 
 Special thanks to Lightfat for help with development and testing.
+Thanks to everyone in the +R modding discord who checked out the mod and submitted issues.
 
 ## Legal
 ACPR Improvement Mod is NOT associated with Arc System Works or any of its partners / affiliates.  
