@@ -10,7 +10,7 @@ Features of this mod:
 4. Custom AI based on case-based-reasoning - based on implementation by [KDing0](https://github.com/KDing0/BBCF-Improvement-Mod/commits?author=KDing0) from the original BBCF mod.  
 
 ## Installation
-Unpack the .7z file (ACPR_IM-V1.0.0-Online.7z) from the [releases](https://github.com/DPS-FGC/ACPR_IM/releases/latest) section and extract the contents.
+Unpack the .7z file from the [releases](https://github.com/DPS-FGC/ACPR_IM/releases/latest) section and extract the contents.
 dinput8.dll and all accompanying files should be placed in the folder where GGXXACPR_Win.exe is located.
 
 The mod was tested under Windows 11, Linux (wine and proton) and Android (winlator) using both original steam_api.dll and
