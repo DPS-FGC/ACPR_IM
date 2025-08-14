@@ -219,20 +219,15 @@ void __declspec(naked) SkipStateMismatch()
 	}
 }
 
-DWORD SetWindowPosFuncAddr = 0;
-WORD SetWindowPosNop = 0x9090;
-WORD SetWindowPosOriginalBytes = 0;
-//Deny window movement when moving the mod menu (to disable movement of game window in borderless mode).
-void DenyWindowPosChange(bool forcePosChange)
+int PassMouseMovementToGame()
 {
-	if ((GetForegroundWindow() != g_gameProc.hWndGameWindow ||
-		ImGui::GetIO().WantCaptureMouse) && !forcePosChange)
+	if (GetForegroundWindow() != g_gameProc.hWndGameWindow ||
+		ImGui::GetIO().WantCaptureMouse)
 	{
-		HookManager::OverWriteBytes((void*)SetWindowPosFuncAddr, (void*)(SetWindowPosFuncAddr + 3), "\x00\x00", "??", "\x90\x90");
-		return;
+		return 0;
 	}
 
-	HookManager::OverWriteBytes((void*)SetWindowPosFuncAddr, (void*)(SetWindowPosFuncAddr + 3), "\x00\x00", "??", "\xFF\xD2");
+	return 1;
 }
 
 DWORD User32SetWindowPosAddr = 0;
@@ -241,51 +236,21 @@ void __declspec(naked) DenyWindowMovement()
 {
 	__asm
 	{
-		pushad
-		push 00h
-		call DenyWindowPosChange
-		add esp, 04
-		popad
 		push 00h
 		push ebx
+
+		pushad
+		call PassMouseMovementToGame
+		test eax, eax
+		popad
+		jz DENY
+
 		call[User32SetWindowPosAddr]
+		jmp EXIT
+	DENY:
+		add esp, 1Ch //Manually clean stack when not calling function		
+	EXIT:
 		jmp[DenyWindowMovementJmpBackAddr]
-	}
-}
-
-DWORD ResizeWindowJmpBackAddr = 0;
-void __declspec(naked) ResizeWindow()
-{
-	__asm
-	{
-		pushad
-		push 01h                  //Restore  bytes for SetWindowPos if resolution was changed
-		call DenyWindowPosChange
-		add esp, 04
-		popad
-		push -02h
-		push edx
-		call[User32SetWindowPosAddr]
-		jmp[ResizeWindowJmpBackAddr]
-	}
-}
-
-DWORD GetDisplayModeJmpBackAddr = 0;
-void __declspec(naked) GetDisplayMode()
-{
-	__asm
-	{
-		pushad
-		cmp ecx, 01h             //Restore SetWindowPos if display mode is chosen as full screen otherwise the window will get stuck
-		jne EXIT
-		push 01h
-		call DenyWindowPosChange
-		add esp, 04h
-EXIT:
-		popad
-		mov edx, [esp+18h]
-		shl ecx, 04h
-		jmp[GetDisplayModeJmpBackAddr]
 	}
 }
 
@@ -497,15 +462,7 @@ bool placeHooks_acpr()
 	DenyWindowMovementJmpBackAddr = HookManager::SetHook("DenyWindowMovement", "\x6A\x00\x53\xFF\x15\x00\x00\x00\x00\x8B\x4D\xFC",
 		"xxxxx????xxx", 9, DenyWindowMovement, false);
 	User32SetWindowPosAddr = *(DWORD*)(HookManager::GetBytesFromAddr("DenyWindowMovement", 5, 4));
-	SetWindowPosFuncAddr = *(DWORD*)(*(DWORD*)((char*)(*(DWORD*)(HookManager::GetBytesFromAddr("DenyWindowMovement", 5, 4))) + 2)) + 10;
-	SetWindowPosOriginalBytes = *(WORD*)SetWindowPosFuncAddr;
 	HookManager::ActivateHook("DenyWindowMovement");
-
-	ResizeWindowJmpBackAddr = HookManager::SetHook("ResizeWindow", "\x6A\xFE\x52\xFF\x15\x00\x00\x00\x00\x8B\x4D\xFC",
-		"xxxxx????xxx", 9, ResizeWindow, true);
-
-	GetDisplayModeJmpBackAddr = HookManager::SetHook("GetDisplayMode", "\x8B\x54\x24\x18\xC1\xE1\x04",
-		"xxxxxxx", 7, GetDisplayMode, true);
 
 	GetSteamInterfacesJmpBackAddr = HookManager::SetHook("GetSteamFriends", "\x68\x00\x00\x00\x00\xC6\x07\x01\xFF\xD6",
 		"x????xxxxx", 10, GetSteamInterfaces, false);

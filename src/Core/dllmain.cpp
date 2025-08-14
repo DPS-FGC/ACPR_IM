@@ -182,6 +182,9 @@ DWORD WINAPI ACPR_IM_Start(HMODULE hModule)
 		return 1;
 	}
 
+	HMODULE hExe = GetModuleHandle(NULL);
+	LOG(1, "Executable main address: %p\n", hExe);
+
 	CreateCustomDirectories();
 	SetUnhandledExceptionFilter(UnhandledExFilter);
 
