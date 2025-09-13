@@ -15,7 +15,7 @@ RoomManager::~RoomManager() {}
 void RoomManager::SendAnnounce()
 {
 	LOG(2, "RoomManager::SendAnnounce\n");
-	char name[32];
+	char name[33];
 	strcpy(name, GetThisPlayerSteamName());
 	Packet packet = Packet((void*)name, strlen(name), PacketType_IMID_Announce, m_thisPlayerSteamID.ConvertToUint64());
 
@@ -50,7 +50,7 @@ void RoomManager::SendAcknowledge(Packet* packet)
 	IMPlayer otherPlayer = IMPlayer(packet->steamID, (const char*)packet->data, packet->dataSize);
 	AddIMPlayerToRoom(otherPlayer);
 
-	char name[32];
+	char name[33];
 	strcpy(name, GetThisPlayerSteamName());
 	Packet ackPacket = Packet((void*)name, strlen(name), PacketType_IMID_Acknowledge, m_thisPlayerSteamID.ConvertToUint64());
 	m_pNetworkManager->SendPacket(&otherPlayer.steamID, &ackPacket);
@@ -73,7 +73,7 @@ void RoomManager::AcknowledgeSpectate(Packet* packet)
 
 	IMPlayer otherPlayer = IMPlayer(packet->steamID, (const char*)packet->data, packet->dataSize);
 
-	char name[32];
+	char name[33];
 	strcpy(name, GetThisPlayerSteamName());
 	Packet ackPacket = Packet((void*)name, strlen(name), PacketType_IMID_PlayerInfo, m_thisPlayerSteamID.ConvertToUint64(), 0,
 		GetThisPlayerMatchPlayerIndex());
