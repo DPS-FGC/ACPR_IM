@@ -697,6 +697,14 @@ std::wstring PaletteManager::FindReplayPaletteFileRecursive(std::wstring& wFolde
 {
 	LOG(2, "Searching for custom palette file for replay.\n");
 
+	//Extract only file name without path
+	size_t pos = wReplayName.find_last_of(L"\\/");
+	std::wstring wReplayFileName;
+	if (pos == std::wstring::npos) {
+		wReplayFileName = wReplayName;
+	}
+	wReplayFileName = wReplayName.substr(pos + 1);
+
 	HANDLE hFind;
 	WIN32_FIND_DATA data;
 
@@ -728,11 +736,11 @@ std::wstring PaletteManager::FindReplayPaletteFileRecursive(std::wstring& wFolde
 		std::wstring wFileName(data.cFileName);
 		std::wstring wFileNameNoExt = wFileName.substr(0, wFileName.rfind('.'));
 
-		if (wFileNameNoExt != wReplayName)
+		if (wFileNameNoExt != wReplayFileName)
 			continue;
 
-		std::string fileName(wFileName.begin(), wFileName.end());
-		std::string fullPath(wFolderPath.begin(), wFolderPath.end());
+		std::wstring fileName(wFileName.begin(), wFileName.end());
+		std::wstring fullPath(wFolderPath.begin(), wFolderPath.end());
 		fullPath.pop_back(); // Delete "*" at the end
 		fullPath += fileName;
 		wFolderPath.pop_back();
@@ -740,15 +748,15 @@ std::wstring PaletteManager::FindReplayPaletteFileRecursive(std::wstring& wFolde
 		LOG(2, "\tFILE: %s", fileName.c_str());
 		LOG(2, "\t\tFull path: %s\n", fullPath.c_str());
 
-		if (fileName.find(".prep") != std::string::npos)
+		if (fileName.find(L".prep") != std::wstring::npos)
 		{
 			result = std::wstring(fullPath.begin(), fullPath.end());
 			break;
 		}
 		else
 		{
-			LOG(2, "Unrecognized file format for '%s'\n", fileName.c_str());
-			g_imGuiLogger->Log("[error] Unable to open '%s' : not an %s file\n", fileName.c_str(), ".prep");
+			LOG(2, "Unrecognized file format for '%s'\n", utf16_to_utf8(fileName).c_str());
+			g_imGuiLogger->Log("[error] Unable to open '%s' : not an %s file\n", utf16_to_utf8(fileName).c_str(), ".prep");
 		}
 
 	} while (FindNextFile(hFind, &data));
