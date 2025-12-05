@@ -75,7 +75,7 @@ void MatchState::OnMatchInit()
 				g_interfaces.pPaletteManager->RestoreOrigPal(g_interfaces.Player1.GetPalHandle());
 				g_interfaces.pPaletteManager->RestoreOrigPal(g_interfaces.Player2.GetPalHandle());
 
-				char name[32];
+				char name[33];
 				strcpy(name, g_interfaces.pRoomManager->GetThisPlayerSteamName());
 				Packet packet = Packet(
 					(void*)name, strlen(name), PacketType_IMID_AnnounceSpectate, g_interfaces.pRoomManager->GetThisPlayerSteamID()
