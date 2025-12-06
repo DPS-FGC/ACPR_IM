@@ -4,6 +4,7 @@ enum HitboxType_ : uint16_t
 {
 	HitboxType_Hitbox = 1,
 	HitboxType_Hurtbox = 2,
+	HitboxType_Extra = 3,
 	HitboxType_Pushbox = 4
 };
 

@@ -58,7 +58,9 @@ struct PlayerExtra
 	uint32_t characterSLOT5; //0x90 Used for A.B.A gauge, first byte is non zero when Jam parry is active, Counts number of times Testament's crow attacked
 	uint16_t characterSLOT6; //0x94. Used for Testament crow pattern, order-sol flame distortion.
 	uint16_t characterSLOT7; //0x96. Used for Order-Sol gauge.
-	char pad_98[48]; //0x98.
+	char pad_98[20]; //0x98.
+	uint32_t hitstunFlags; //0xAC. Used to determine special properties of hit (i.e wall bounce, ground bounce, clean hit, etc...)
+	char buffer_B0[24];
 	int32_t specialFunction; //0xC8. Stores address of function to execute for (Jam parry, potemkin F.D.B projectile, Potemkin hammer fall, Anji parry, etc...)
 	char pad_CC[13]; //0xCC.
 	uint8_t projectileFlag; //0xD9. Used for Millia silent force (0 = not used, 2 = used) and to denote if projectiles of various characters are active (0 - not active, 1 - active).
@@ -85,7 +87,22 @@ struct PlayerExtra
 	uint8_t sbCooldownTimer; //0x10C. Cannot block while >0. Increases after slashback.
 	char pad_10C[5]; //0x10D.
 	uint8_t lateThrowFlag; //0x112. When late throw break possible it's value is 0x01, after it's too late it's 0x02. If set to 0x0F during early throw, will result in throw tech.
-	char pad_113[53];
+	char pad_113[9];
+	uint8_t cleanHitCounter; //0x11C. Number of times hit with clean hit.
+	char pad_11D[43];
+
+};
+
+struct HitParam
+{
+	char buffer_00[72];
+	int16_t clCenterX; //0x48
+	int16_t clCenterY; //0x4A
+	uint16_t clBaseWidth; //0x4C. Base halfwidth of clean-hit hitbox
+	uint16_t clBaseHeight; //0x4E. Base halfheight of clean-hit hitbox
+	int16_t clScale; //0x50 //-1 if not clean hit hitbox, otherwise contains shrinking factor for clean hit hitbox.
+	uint8_t forceCL; //0x52
+	char buffer_53[8];
 };
 
 struct CharData
@@ -135,7 +152,9 @@ struct CharData
 	char pad_7C[8]; //0x7C.
 	uint8_t numHitbox; //0x84. Number of hitboxes in array.
 	uint8_t idxHitbox; //0x85.
-	char pad_86[42]; //0x86.
+	char pad_86[2]; //0x86.
+	HitParam* hitParam; //0x88.
+	char pad_8C[36]; //0x8C.
 	int32_t posX; //0xB0.
 	int32_t posY; //0xB4.
 	char pad_B8[68]; //0xB8.

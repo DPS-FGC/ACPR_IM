@@ -59,6 +59,7 @@ void HitboxOverlay::Draw()
 		DrawCollisionAreas(g_interfaces.Player1.GetData(), entityWorldPos);
 		DrawPlayerPushboxes(g_interfaces.Player1.GetData());
 		DrawPlayerGrabBox(g_interfaces.Player1.GetData(), g_interfaces.frameMeterInterface.settings.AlwaysDrawThrowRange);
+		DrawCleanHitBox(g_interfaces.Player1.GetData());
 	}
 
 	if (drawCharacterHitbox[1])
@@ -67,6 +68,7 @@ void HitboxOverlay::Draw()
 		DrawCollisionAreas(g_interfaces.Player2.GetData(), entityWorldPos);
 		DrawPlayerPushboxes(g_interfaces.Player2.GetData());
 		DrawPlayerGrabBox(g_interfaces.Player2.GetData(), g_interfaces.frameMeterInterface.settings.AlwaysDrawThrowRange);
+		DrawCleanHitBox(g_interfaces.Player2.GetData());
 	}
 
 	if (*g_gameVals.entityCount > 0)
@@ -105,6 +107,8 @@ void HitboxOverlay::AfterDraw()
 #define FONT_SIZE 24
 #define LEGEND_FONT_SIZE 16
 #define LABEL_BG 0x96000000
+
+#define CLEAN_HIT_Y_OFFSET 170
 
 char frameMeterLabel[128];
 void HitboxOverlay::DrawFrameMeter()
@@ -678,6 +682,40 @@ void HitboxOverlay::DrawPlayerPushboxes(const CharData* charObj)
 
 }
 
+void HitboxOverlay::DrawCleanHitBox(const CharData* charObj)
+{
+
+	Hitbox clbox = GetCLRect(charObj);
+	Hitbox drawbox = ScaleHitbox(&clbox, charObj);
+	ImRect mappedRect = MapHitboxToOrigin(&drawbox, charObj->facingRight, charObj->posX, charObj->posY);
+
+	ImVec2 pointA = mappedRect.Min;
+	ImVec2 pointB(mappedRect.Max.x, mappedRect.Min.y);
+	ImVec2 pointC = mappedRect.Max;
+	ImVec2 pointD(mappedRect.Min.x, mappedRect.Max.y);
+
+	pointA = CalculateScreenPosition(pointA);
+	pointB = CalculateScreenPosition(pointB);
+	pointC = CalculateScreenPosition(pointC);
+	pointD = CalculateScreenPosition(pointD);
+
+	pointA = ImVec2(pointA.x + m_rectThickness / 2.0, pointA.y + m_rectThickness / 2.0);
+	pointB = ImVec2(pointB.x - m_rectThickness / 2.0, pointB.y + m_rectThickness / 2.0);
+	pointC = ImVec2(pointC.x - m_rectThickness / 2.0, pointC.y - m_rectThickness / 2.0);
+	pointD = ImVec2(pointD.x + m_rectThickness / 2.0, pointD.y - m_rectThickness / 2.0);
+
+	const unsigned int colorCollision = 0x80FF8000;
+
+	RenderRect(pointA, pointB, pointC, pointD, colorCollision, m_rectThickness);
+
+	const unsigned char transparency = 0xFF * m_rectFillTransparency;
+	unsigned int clearedTransparencyBits = (colorCollision & ~0xFF000000);
+	unsigned int transparencyPercentage = ((int)transparency << 24) & 0xFF000000;
+	const unsigned int rectFillColor = clearedTransparencyBits | transparencyPercentage;
+	RenderRectFilled(pointA, pointB, pointC, pointD, rectFillColor);
+
+}
+
 Hitbox HitboxOverlay::GetPlayerThrowBox(const CharData* charObj)
 {
 	Hitbox pushbox = GetPlayerPushBox(charObj);
@@ -713,6 +751,38 @@ Hitbox HitboxOverlay::GetPlayerThrowBox(const CharData* charObj)
 		};
 	}
 	
+}
+
+Hitbox HitboxOverlay::GetCLRect(const CharData* charObj)
+{
+	if (charObj->hitParam->clScale == -1)
+		return Hitbox();
+
+	CharData* opponent = charObj->playerID == 0 ? g_interfaces.Player2.GetData() : g_interfaces.Player1.GetData();
+	if (opponent == NULL)
+		return Hitbox();
+
+	uint8_t CLCounter = opponent->extraData->cleanHitCounter;
+
+	// If player has just hit a clean hit, draw the CLRect as it was before it shrunk.
+	//if (IsInCLHitstop(p)) CLCounter--;
+	if ((opponent->extraData->hitstunFlags & 0x00020000) > 0)
+		CLCounter--;
+
+	HitParam* hp = charObj->hitParam;
+
+	int16_t halfWidth = hp->clBaseWidth - (hp->clScale * CLCounter);
+	int16_t halfHeight = hp->clBaseHeight - (hp->clScale * CLCounter);
+	halfWidth = halfWidth >= 1 ? halfWidth : 1;
+	halfHeight = halfHeight >= 1 ? halfHeight : 1;
+
+	return
+	{
+		(int16_t)(hp->clCenterX - halfWidth),
+		(int16_t)(hp->clCenterY - halfHeight + CLEAN_HIT_Y_OFFSET),
+		(int16_t)(halfWidth * 2),
+		(int16_t)(halfHeight * 2)
+	};
 }
 
 void HitboxOverlay::DrawPlayerGrabBox(const CharData* charObj, bool drawOverride)

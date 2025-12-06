@@ -39,9 +39,11 @@ private:
 	void DrawPlayerPushboxes(const CharData* charObj);
 	void DrawPlayerGrabBox(const CharData* charObj, bool drawOverride);
 	bool DrawPlayerCommandGrabBox(const CharData* charObj);
+	void DrawCleanHitBox(const CharData* charObj);
 
 	Hitbox GetPlayerPushBox(const CharData* charObj);
 	Hitbox GetPlayerThrowBox(const CharData* charObj);
+	Hitbox GetCLRect(const CharData* charObj);
 
 	bool IsOwnerEnabled(byte playerID);
 	bool WorldToScreen(LPDIRECT3DDEVICE9 pDevice, D3DXMATRIX* view, D3DXMATRIX* proj, D3DXVECTOR3* pos, D3DXVECTOR3* out);
