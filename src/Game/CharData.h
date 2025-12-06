@@ -143,7 +143,7 @@ struct CharData
 	int16_t scaleX; //0x50.
 	int16_t scaleY; //0x52.
 	void* hitboxArray; //0x54.
-	char pad_58[4]; //0x58.
+	void* hitboxExtraArray; //0x58.
 	int8_t colliflag; //0x5C. Active during hitbox-hurtbox collisions.
 	int8_t hitcolliflag; //0x5D. Active during hitbox-hurtbox collisions.
 	int8_t damageflag; //0x5E. Active during hitbox-hurtbox collisions.
@@ -157,7 +157,9 @@ struct CharData
 	char pad_8C[36]; //0x8C.
 	int32_t posX; //0xB0.
 	int32_t posY; //0xB4.
-	char pad_B8[68]; //0xB8.
+	char pad_B8[44]; //0xB8.
+	uint32_t actionHeaderFalgs; //0xE4.
+	char pad_E8[20]; //0xE8.
 	int8_t pad_FC; //0xFC.
 	uint8_t hitstopTimer; //0xFD.
 	int8_t totalBlockstun; //0xFE. During block stun or stagger, when frameCounter reaches this value, return back to neutral.

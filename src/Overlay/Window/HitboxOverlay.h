@@ -40,6 +40,7 @@ private:
 	void DrawPlayerGrabBox(const CharData* charObj, bool drawOverride);
 	bool DrawPlayerCommandGrabBox(const CharData* charObj);
 	void DrawCleanHitBox(const CharData* charObj);
+	void DrawHitbox(Hitbox* drawbox, const CharData* charObj, const unsigned int rectBorderColor);
 
 	Hitbox GetPlayerPushBox(const CharData* charObj);
 	Hitbox GetPlayerThrowBox(const CharData* charObj);

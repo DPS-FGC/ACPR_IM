@@ -252,6 +252,9 @@
       <ModuleDefinitionFile>export/dinput8.def</ModuleDefinitionFile>
       <AdditionalLibraryDirectories>D:\Program Files %28x86%29\OpenSSL-Win32\lib\VC\x86\MT;D:\Program Files %28x86%29\boost\boost_1_87_0\lib32-msvc-14.3;D:\Program Files %28x86%29\boost\boost_1_87_0\stage\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
+    <PostBuildEvent>
+      <Command>xcopy "$(TargetPath)" "D:\Games\Guilty Gear XX Accent Core Plus R" /Y /I</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>

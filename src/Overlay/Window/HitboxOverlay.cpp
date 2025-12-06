@@ -509,13 +509,46 @@ ImRect HitboxOverlay::MapHitboxToOrigin(const Hitbox* hitbox, bool facingRight, 
 		yPos + (hitbox->offsetY + hitbox->height) * 100);
 }
 
+void HitboxOverlay::DrawHitbox(Hitbox* drawbox, const CharData* charObj, const unsigned int rectBorderColor)
+{
+	ImRect mappedRect = MapHitboxToOrigin(drawbox, charObj->facingRight, charObj->posX, charObj->posY);
+
+	ImVec2 pointA = mappedRect.Min;
+	ImVec2 pointB(mappedRect.Max.x, mappedRect.Min.y);
+	ImVec2 pointC = mappedRect.Max;
+	ImVec2 pointD(mappedRect.Min.x, mappedRect.Max.y);
+
+	pointA = CalculateScreenPosition(pointA);
+	pointB = CalculateScreenPosition(pointB);
+	pointC = CalculateScreenPosition(pointC);
+	pointD = CalculateScreenPosition(pointD);
+
+	pointA = ImVec2(pointA.x + m_rectThickness / 2.0, pointA.y + m_rectThickness / 2.0);
+	pointB = ImVec2(pointB.x - m_rectThickness / 2.0, pointB.y + m_rectThickness / 2.0);
+	pointC = ImVec2(pointC.x - m_rectThickness / 2.0, pointC.y - m_rectThickness / 2.0);
+	pointD = ImVec2(pointD.x + m_rectThickness / 2.0, pointD.y - m_rectThickness / 2.0);
+
+	RenderRect(pointA, pointB, pointC, pointD, rectBorderColor, m_rectThickness);
+
+	const unsigned char transparency = 0xFF * m_rectFillTransparency;
+	unsigned int clearedTransparencyBits = (rectBorderColor & ~0xFF000000);
+	unsigned int transparencyPercentage = ((int)transparency << 24) & 0xFF000000;
+	const unsigned int rectFillColor = clearedTransparencyBits | transparencyPercentage;
+	RenderRectFilled(pointA, pointB, pointC, pointD, rectFillColor);
+}
+
 void HitboxOverlay::DrawCollisionAreas(const CharData* charObj, const ImVec2 playerWorldPos)
 {
 	std::vector<Hitbox> entries = HitboxReader::getHitboxes(charObj);
 
+	const unsigned int colorGreen = 0xFF00FF00;
+	const unsigned int colorRed = 0xFFFF0000;
+
+	int index = -1;
 	for (const Hitbox &entry : entries)
 	{
-		if (entry.type != HitboxType_Hurtbox && entry.type != HitboxType_Hitbox)
+		index++;
+		if (entry.type != HitboxType_Hurtbox && entry.type != HitboxType_Hitbox && entry.type != HitboxType_Extra)
 			continue; //This is needed to not draw special effect entities
 		if (charObj->extraData != NULL) //No extra data available for entities, skip this check
 		{
@@ -537,41 +570,38 @@ void HitboxOverlay::DrawCollisionAreas(const CharData* charObj, const ImVec2 pla
 				(entry.type == HitboxType_Hitbox && (charObj->status & 0x0040) > 0))
 				continue;
 		}
-		
+
 		Hitbox drawbox = ScaleHitbox(&entry, charObj);
-		ImRect mappedRect = MapHitboxToOrigin(&drawbox, charObj->facingRight, charObj->posX, charObj->posY);
-
-		ImVec2 pointA = mappedRect.Min;
-		ImVec2 pointB(mappedRect.Max.x, mappedRect.Min.y);
-		ImVec2 pointC = mappedRect.Max;
-		ImVec2 pointD(mappedRect.Min.x, mappedRect.Max.y);
-
-		pointA = CalculateScreenPosition(pointA);
-		pointB = CalculateScreenPosition(pointB);
-		pointC = CalculateScreenPosition(pointC);
-		pointD = CalculateScreenPosition(pointD);
-
-		pointA = ImVec2(pointA.x + m_rectThickness / 2.0, pointA.y + m_rectThickness / 2.0);
-		pointB = ImVec2(pointB.x - m_rectThickness / 2.0, pointB.y + m_rectThickness / 2.0);
-		pointC = ImVec2(pointC.x - m_rectThickness / 2.0, pointC.y - m_rectThickness / 2.0);
-		pointD = ImVec2(pointD.x + m_rectThickness / 2.0, pointD.y - m_rectThickness / 2.0);
-
-		const unsigned int colorGreen = 0xFF00FF00;
-		const unsigned int colorRed = 0xFFFF0000;
+		if (entry.type == HitboxType_Extra)
+		{
+			if (charObj->hitboxExtraArray == NULL)
+				continue;
+			
+			Hitbox* extra = (Hitbox*)((char*)charObj->hitboxExtraArray + index * sizeof(Hitbox));
+			if (extra->type != HitboxType_Hitbox && extra->type != HitboxType_Hurtbox)
+				continue;
+			drawbox = ScaleHitbox(extra, charObj);
+		}
+	
 		const unsigned int rectBorderColor = entry.type == HitboxType_Hurtbox ? colorGreen : colorRed;
 
-		RenderRect(pointA, pointB, pointC, pointD, rectBorderColor, m_rectThickness);
+		DrawHitbox(&drawbox, charObj, rectBorderColor);
 
-		const unsigned char transparency = 0xFF * m_rectFillTransparency;
-		unsigned int clearedTransparencyBits = (rectBorderColor & ~0xFF000000);
-		unsigned int transparencyPercentage = ((int)transparency << 24) & 0xFF000000;
-		const unsigned int rectFillColor = clearedTransparencyBits | transparencyPercentage;
-		RenderRectFilled(pointA, pointB, pointC, pointD, rectFillColor);
+	}
 
-		if (drawOriginLine)
-		{
-			DrawOriginLine(playerWorldPos, 0.0f);
-		}
+	//Special check for Slide head
+	if (charObj->charIndex == CharIndex_Potemkin &&
+		charObj->actId == 181 && //Slide head animation id
+		charObj->actionHeaderFalgs == 0x10102015 && //Falgs for unblockable section of slide head
+		charObj->hitboxExtraArray != NULL)
+	{
+		Hitbox drawbox = ScaleHitbox((Hitbox*)charObj->hitboxExtraArray, charObj);
+		DrawHitbox(&drawbox, charObj, colorRed);
+	}
+
+	if (drawOriginLine)
+	{
+		DrawOriginLine(playerWorldPos, 0.0f);
 	}
 }
 
@@ -653,32 +683,11 @@ void HitboxOverlay::DrawPlayerPushboxes(const CharData* charObj)
 	
 	Hitbox pushbox = GetPlayerPushBox(charObj);
 	Hitbox drawbox = ScaleHitbox(&pushbox, charObj);
-	ImRect mappedRect = MapHitboxToOrigin(&drawbox, charObj->facingRight, charObj->posX, charObj->posY);
-
-	ImVec2 pointA = mappedRect.Min;
-	ImVec2 pointB(mappedRect.Max.x, mappedRect.Min.y);
-	ImVec2 pointC = mappedRect.Max;
-	ImVec2 pointD(mappedRect.Min.x, mappedRect.Max.y);
-
-	pointA = CalculateScreenPosition(pointA);
-	pointB = CalculateScreenPosition(pointB);
-	pointC = CalculateScreenPosition(pointC);
-	pointD = CalculateScreenPosition(pointD);
-
-	pointA = ImVec2(pointA.x + m_rectThickness / 2.0, pointA.y + m_rectThickness / 2.0);
-	pointB = ImVec2(pointB.x - m_rectThickness / 2.0, pointB.y + m_rectThickness / 2.0);
-	pointC = ImVec2(pointC.x - m_rectThickness / 2.0, pointC.y - m_rectThickness / 2.0);
-	pointD = ImVec2(pointD.x + m_rectThickness / 2.0, pointD.y - m_rectThickness / 2.0);
+	
 
 	const unsigned int colorCollision = 0xFF00FFFF;
 
-	RenderRect(pointA, pointB, pointC, pointD, colorCollision, m_rectThickness);
-
-	const unsigned char transparency = 0xFF * m_rectFillTransparency;
-	unsigned int clearedTransparencyBits = (colorCollision & ~0xFF000000);
-	unsigned int transparencyPercentage = ((int)transparency << 24) & 0xFF000000;
-	const unsigned int rectFillColor = clearedTransparencyBits | transparencyPercentage;
-	RenderRectFilled(pointA, pointB, pointC, pointD, rectFillColor);
+	DrawHitbox(&drawbox, charObj, colorCollision);
 
 }
 
@@ -687,32 +696,10 @@ void HitboxOverlay::DrawCleanHitBox(const CharData* charObj)
 
 	Hitbox clbox = GetCLRect(charObj);
 	Hitbox drawbox = ScaleHitbox(&clbox, charObj);
-	ImRect mappedRect = MapHitboxToOrigin(&drawbox, charObj->facingRight, charObj->posX, charObj->posY);
 
-	ImVec2 pointA = mappedRect.Min;
-	ImVec2 pointB(mappedRect.Max.x, mappedRect.Min.y);
-	ImVec2 pointC = mappedRect.Max;
-	ImVec2 pointD(mappedRect.Min.x, mappedRect.Max.y);
+	const unsigned int colorCL = 0x80FF8000;
 
-	pointA = CalculateScreenPosition(pointA);
-	pointB = CalculateScreenPosition(pointB);
-	pointC = CalculateScreenPosition(pointC);
-	pointD = CalculateScreenPosition(pointD);
-
-	pointA = ImVec2(pointA.x + m_rectThickness / 2.0, pointA.y + m_rectThickness / 2.0);
-	pointB = ImVec2(pointB.x - m_rectThickness / 2.0, pointB.y + m_rectThickness / 2.0);
-	pointC = ImVec2(pointC.x - m_rectThickness / 2.0, pointC.y - m_rectThickness / 2.0);
-	pointD = ImVec2(pointD.x + m_rectThickness / 2.0, pointD.y - m_rectThickness / 2.0);
-
-	const unsigned int colorCollision = 0x80FF8000;
-
-	RenderRect(pointA, pointB, pointC, pointD, colorCollision, m_rectThickness);
-
-	const unsigned char transparency = 0xFF * m_rectFillTransparency;
-	unsigned int clearedTransparencyBits = (colorCollision & ~0xFF000000);
-	unsigned int transparencyPercentage = ((int)transparency << 24) & 0xFF000000;
-	const unsigned int rectFillColor = clearedTransparencyBits | transparencyPercentage;
-	RenderRectFilled(pointA, pointB, pointC, pointD, rectFillColor);
+	DrawHitbox(&drawbox, charObj, colorCL);
 
 }
 
@@ -759,7 +746,7 @@ Hitbox HitboxOverlay::GetCLRect(const CharData* charObj)
 		return Hitbox();
 
 	CharData* opponent = charObj->playerID == 0 ? g_interfaces.Player2.GetData() : g_interfaces.Player1.GetData();
-	if (opponent == NULL)
+	if (opponent == NULL || opponent->extraData == NULL)
 		return Hitbox();
 
 	uint8_t CLCounter = opponent->extraData->cleanHitCounter;
@@ -796,32 +783,10 @@ void HitboxOverlay::DrawPlayerGrabBox(const CharData* charObj, bool drawOverride
 	{
 		Hitbox throwBox = GetPlayerThrowBox(charObj);
 		Hitbox drawbox = ScaleHitbox(&throwBox, charObj);
-		ImRect mappedRect = MapHitboxToOrigin(&drawbox, charObj->facingRight, charObj->posX, charObj->posY);
-
-		ImVec2 pointA = mappedRect.Min;
-		ImVec2 pointB(mappedRect.Max.x, mappedRect.Min.y);
-		ImVec2 pointC = mappedRect.Max;
-		ImVec2 pointD(mappedRect.Min.x, mappedRect.Max.y);
-
-		pointA = CalculateScreenPosition(pointA);
-		pointB = CalculateScreenPosition(pointB);
-		pointC = CalculateScreenPosition(pointC);
-		pointD = CalculateScreenPosition(pointD);
-
-		pointA = ImVec2(pointA.x + m_rectThickness / 2.0, pointA.y + m_rectThickness / 2.0);
-		pointB = ImVec2(pointB.x - m_rectThickness / 2.0, pointB.y + m_rectThickness / 2.0);
-		pointC = ImVec2(pointC.x - m_rectThickness / 2.0, pointC.y - m_rectThickness / 2.0);
-		pointD = ImVec2(pointD.x + m_rectThickness / 2.0, pointD.y - m_rectThickness / 2.0);
 
 		const unsigned int colorGrab = 0xFFFF00FF;
 
-		RenderRect(pointA, pointB, pointC, pointD, colorGrab, m_rectThickness);
-
-		const unsigned char transparency = 0xFF * m_rectFillTransparency;
-		unsigned int clearedTransparencyBits = (colorGrab & ~0xFF000000);
-		unsigned int transparencyPercentage = ((int)transparency << 24) & 0xFF000000;
-		const unsigned int rectFillColor = clearedTransparencyBits | transparencyPercentage;
-		RenderRectFilled(pointA, pointB, pointC, pointD, rectFillColor);
+		DrawHitbox(&drawbox, charObj, colorGrab);
 	}
 }
 
@@ -841,32 +806,10 @@ bool HitboxOverlay::DrawPlayerCommandGrabBox(const CharData* charObj)
 		};
 
 		Hitbox drawbox = ScaleHitbox(&cmdThrowHitboxRep, charObj);
-		ImRect mappedRect = MapHitboxToOrigin(&drawbox, charObj->facingRight, charObj->posX, charObj->posY);
-
-		ImVec2 pointA = mappedRect.Min;
-		ImVec2 pointB(mappedRect.Max.x, mappedRect.Min.y);
-		ImVec2 pointC = mappedRect.Max;
-		ImVec2 pointD(mappedRect.Min.x, mappedRect.Max.y);
-
-		pointA = CalculateScreenPosition(pointA);
-		pointB = CalculateScreenPosition(pointB);
-		pointC = CalculateScreenPosition(pointC);
-		pointD = CalculateScreenPosition(pointD);
-
-		pointA = ImVec2(pointA.x + m_rectThickness / 2.0, pointA.y + m_rectThickness / 2.0);
-		pointB = ImVec2(pointB.x - m_rectThickness / 2.0, pointB.y + m_rectThickness / 2.0);
-		pointC = ImVec2(pointC.x - m_rectThickness / 2.0, pointC.y - m_rectThickness / 2.0);
-		pointD = ImVec2(pointD.x + m_rectThickness / 2.0, pointD.y - m_rectThickness / 2.0);
-
+		
 		const unsigned int colorGrab = 0xFFFF00FF;
 
-		RenderRect(pointA, pointB, pointC, pointD, colorGrab, m_rectThickness);
-
-		const unsigned char transparency = 0xFF * m_rectFillTransparency;
-		unsigned int clearedTransparencyBits = (colorGrab & ~0xFF000000);
-		unsigned int transparencyPercentage = ((int)transparency << 24) & 0xFF000000;
-		const unsigned int rectFillColor = clearedTransparencyBits | transparencyPercentage;
-		RenderRectFilled(pointA, pointB, pointC, pointD, rectFillColor);
+		DrawHitbox(&drawbox, charObj, colorGrab);
 		return true;
 	}
 	return false;
