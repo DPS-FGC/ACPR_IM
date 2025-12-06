@@ -272,6 +272,8 @@ void MainWindow::DrawHitboxOverlaySection() const
 	ImGui::HoverTooltip("Will not pause frame meter during hitstop frames.");
 	ImGui::Checkbox("Record during super flash##recordSuperflash", &g_interfaces.frameMeterInterface.settings.RecordDuringSuperFlash);
 	ImGui::HoverTooltip("Will not pause frame meter during super flash.");
+	ImGui::Checkbox("Draw inifinite height##drawinfheight", &g_interfaces.frameMeterInterface.settings.DrawInfiniteHeight);
+	ImGui::HoverTooltip("If on, draws horizontal proximity boxes along the entire screen.");
 }
 
 void MainWindow::DrawLinkButtons() const

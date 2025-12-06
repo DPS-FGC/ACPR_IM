@@ -41,10 +41,13 @@ private:
 	bool DrawPlayerCommandGrabBox(const CharData* charObj);
 	void DrawCleanHitBox(const CharData* charObj);
 	void DrawHitbox(Hitbox* drawbox, const CharData* charObj, const unsigned int rectBorderColor);
+	void DrawProximityBoxes(const CharData* charObj, bool isPlayer);
 
 	Hitbox GetPlayerPushBox(const CharData* charObj);
 	Hitbox GetPlayerThrowBox(const CharData* charObj);
 	Hitbox GetCLRect(const CharData* charObj);
+	Hitbox GetProximityBoxPlayer(const CharData* charObj);
+	bool GetProximityBoxEntity(const CharData* charObj, Hitbox& box);
 
 	bool IsOwnerEnabled(byte playerID);
 	bool WorldToScreen(LPDIRECT3DDEVICE9 pDevice, D3DXMATRIX* view, D3DXMATRIX* proj, D3DXVECTOR3* pos, D3DXVECTOR3* out);

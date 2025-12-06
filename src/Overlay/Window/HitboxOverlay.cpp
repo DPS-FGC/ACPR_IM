@@ -60,6 +60,7 @@ void HitboxOverlay::Draw()
 		DrawPlayerPushboxes(g_interfaces.Player1.GetData());
 		DrawPlayerGrabBox(g_interfaces.Player1.GetData(), g_interfaces.frameMeterInterface.settings.AlwaysDrawThrowRange);
 		DrawCleanHitBox(g_interfaces.Player1.GetData());
+		DrawProximityBoxes(g_interfaces.Player1.GetData(), true);
 	}
 
 	if (drawCharacterHitbox[1])
@@ -69,6 +70,7 @@ void HitboxOverlay::Draw()
 		DrawPlayerPushboxes(g_interfaces.Player2.GetData());
 		DrawPlayerGrabBox(g_interfaces.Player2.GetData(), g_interfaces.frameMeterInterface.settings.AlwaysDrawThrowRange);
 		DrawCleanHitBox(g_interfaces.Player2.GetData());
+		DrawProximityBoxes(g_interfaces.Player2.GetData(), true);
 	}
 
 	if (*g_gameVals.entityCount > 0)
@@ -81,6 +83,7 @@ void HitboxOverlay::Draw()
 			{
 				entityWorldPos = CalculateObjWorldPosition(pEntity);
 				DrawCollisionAreas(pEntity, entityWorldPos);
+				DrawProximityBoxes(pEntity, false);
 			}
 			pEntity = pEntity->nextEntity;
 			isEntityActive = pEntity->charIndex > 0;
@@ -678,6 +681,102 @@ Hitbox HitboxOverlay::GetPlayerPushBox(const CharData* charObj)
 	return Hitbox();
 }
 
+#define POTEMKIN_SLIDE_HEAD_ACT_ID 0x78
+#define POTEMKIN_SLIDE_HEAD_RANGE 170
+#define FAUST_HACK_N_SLASH_FAIL_ACT_ID 190
+#define FAUST_HACK_N_SLASH_UNBLOCKABLE_ACT_ID 122
+#define FAUST_HACK_N_SLASH_RANGE 100
+Hitbox HitboxOverlay::GetProximityBoxPlayer(const CharData* charObj)
+{
+	Hitbox box = Hitbox();
+	if (charObj == NULL)
+		return box;
+
+	if (charObj->charIndex == CharIndex_Potemkin &&
+		charObj->actId == POTEMKIN_SLIDE_HEAD_ACT_ID &&
+		charObj->mark != 0)
+	{
+		Hitbox push = GetPlayerPushBox(charObj);
+		box.offsetX = push.offsetX - POTEMKIN_SLIDE_HEAD_RANGE;
+		box.offsetY = push.offsetY;
+		box.width = push.width + POTEMKIN_SLIDE_HEAD_RANGE * 2;
+		box.height = push.height;
+	}
+	else if (charObj->charIndex == CharIndex_Faust &&
+		(charObj->actId == FAUST_HACK_N_SLASH_FAIL_ACT_ID || charObj->actId == FAUST_HACK_N_SLASH_UNBLOCKABLE_ACT_ID) &&
+		charObj->frameCounter == 1)
+	{
+		Hitbox push = GetPlayerPushBox(charObj);
+		box.offsetX = push.offsetX - FAUST_HACK_N_SLASH_RANGE;
+		box.offsetY = push.offsetY;
+		box.width = push.width + FAUST_HACK_N_SLASH_RANGE * 2;
+		box.height = push.height;
+	}
+
+	return box;
+}
+
+#define ROBO_KY_MAT_ID 0x62
+#define ROBO_KY_MAT_COLLISION_RANGE 132
+#define TESTAMENT_ENTITY_ID 0x50
+#define TESTAMENT_HITOMI_ACTIVATION_RANGE_PR 55
+#define TESTAMENT_HITOMI_ACTIVATION_RANGE_AC 70
+#define MAX_DISPLAY_HEIGHT 1000
+#define FAUST_ENTITY_ID 0x2B
+#define FAUST_DONUT_PICKUP_ACT_ID 18
+#define FAUST_CHOCOLATE_PICKUP_ACT_ID 19
+#define FAUST_CHIKUWA_PICKUP_ACT_ID 53
+#define FAUST_FOOD_PICKUP_RANGE 48
+#define EDDIE_ENTITY_ID 0x23
+#define EDDIE_PUDDLE_VERTICAL_RANGE 40
+bool HitboxOverlay::GetProximityBoxEntity(const CharData* charObj, Hitbox& box)
+{
+	box = Hitbox();
+	if (charObj == NULL)
+		return false;
+
+	auto halfHeight = m_rectThickness * 150.0f;
+
+	if (charObj->charIndex == ROBO_KY_MAT_ID)
+	{
+		box.offsetX = -ROBO_KY_MAT_COLLISION_RANGE;
+		box.offsetY = -halfHeight;
+		box.width = ROBO_KY_MAT_COLLISION_RANGE * 2;
+		box.height = halfHeight * 2;
+		return true;
+	}
+	else if (charObj->charIndex == TESTAMENT_ENTITY_ID && (charObj->actId == 10 || charObj->actId == 17))
+	{
+		auto range = *g_gameVals.pGameVerFlag ? TESTAMENT_HITOMI_ACTIVATION_RANGE_PR : TESTAMENT_HITOMI_ACTIVATION_RANGE_AC;
+
+		box.offsetX = -range;
+		box.offsetY = g_interfaces.frameMeterInterface.settings.DrawInfiniteHeight ? -MAX_DISPLAY_HEIGHT : -halfHeight;
+		box.width = range * 2;
+		box.height = g_interfaces.frameMeterInterface.settings.DrawInfiniteHeight ? MAX_DISPLAY_HEIGHT * 2 : halfHeight * 2;
+
+		return true;
+	}
+	else if (charObj->charIndex == FAUST_ENTITY_ID &&
+		(charObj->actId == FAUST_DONUT_PICKUP_ACT_ID || charObj->actId == FAUST_CHOCOLATE_PICKUP_ACT_ID || charObj->actId ==  FAUST_CHIKUWA_PICKUP_ACT_ID))
+	{
+		box.offsetX = -FAUST_FOOD_PICKUP_RANGE;
+		box.offsetY = -halfHeight;
+		box.width = FAUST_FOOD_PICKUP_RANGE * 2;
+		box.height = halfHeight * 2;
+		return true;
+	}
+	else if (charObj->charIndex == EDDIE_ENTITY_ID && charObj->entityIndex == 1 && charObj->transition == 0)
+	{
+		box.offsetX = -charObj->mark;
+		box.offsetY = -EDDIE_PUDDLE_VERTICAL_RANGE;
+		box.width = charObj->mark * 2;
+		box.height = EDDIE_PUDDLE_VERTICAL_RANGE * 2;
+		return true;
+	}
+
+	return false;
+}
+
 void HitboxOverlay::DrawPlayerPushboxes(const CharData* charObj)
 {
 	
@@ -689,6 +788,28 @@ void HitboxOverlay::DrawPlayerPushboxes(const CharData* charObj)
 
 	DrawHitbox(&drawbox, charObj, colorCollision);
 
+}
+
+void HitboxOverlay::DrawProximityBoxes(const CharData* charObj, bool isPlayer)
+{
+
+	Hitbox rangebox;
+	Hitbox drawbox;
+
+	const unsigned int colorProximityPlayer = 0x80FF00FF;
+	const unsigned int colorProximityEntity = 0x80FF8000;
+
+	if (isPlayer)
+	{
+		rangebox = GetProximityBoxPlayer(charObj);
+		drawbox = ScaleHitbox(&rangebox, charObj);
+		DrawHitbox(&drawbox, charObj, colorProximityPlayer);
+	}
+	else if (GetProximityBoxEntity(charObj, rangebox))
+	{
+		drawbox = ScaleHitbox(&rangebox, charObj);
+		DrawHitbox(&drawbox, charObj, colorProximityEntity);
+	}
 }
 
 void HitboxOverlay::DrawCleanHitBox(const CharData* charObj)

@@ -164,5 +164,6 @@ struct CharData
 	uint8_t hitstopTimer; //0xFD.
 	int8_t totalBlockstun; //0xFE. During block stun or stagger, when frameCounter reaches this value, return back to neutral.
 	uint8_t mark; //0xFF.
-	char pad_100[48]; //0x100.
+	int8_t transition; //0x100.
+	char pad_101[47]; //0x101.
 };

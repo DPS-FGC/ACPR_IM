@@ -25,7 +25,9 @@ enum FrameType_
     FrameType_ActiveThrow,
     FrameType_Recovery,
     FrameType_BlockStun,
-    FrameType_HitStun
+    FrameType_HitStun,
+    FrameType_TechableHitstun,
+    FrameType_KnockDownHitstun
 };
 
 enum PrimaryFrameProperty_
@@ -60,6 +62,7 @@ struct FM_Settings
     bool RecordDuringSuperFlash = false;
     bool AdvancedMode = false;
     bool AllowRewindingInReplay = false;
+    bool DrawInfiniteHeight = false;
 };
 
 struct FM_Frame
