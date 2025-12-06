@@ -171,6 +171,12 @@ unsigned int FrameMeterInterface::GetFrameColor(FrameType_ type)
     case FrameType_HitStun:
         return 0xFFC8C800;
         break;
+    case FrameType_TechableHitStun:
+        return 0xFF969600;
+        break;
+    case FrameType_KnockDownHitStun:
+        return 0xFF969600;
+        break;
 	}
     return 0x00000000;
 }

@@ -26,8 +26,8 @@ enum FrameType_
     FrameType_Recovery,
     FrameType_BlockStun,
     FrameType_HitStun,
-    FrameType_TechableHitstun,
-    FrameType_KnockDownHitstun
+    FrameType_TechableHitStun,
+    FrameType_KnockDownHitStun
 };
 
 enum PrimaryFrameProperty_

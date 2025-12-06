@@ -681,8 +681,8 @@ Hitbox HitboxOverlay::GetPlayerPushBox(const CharData* charObj)
 	return Hitbox();
 }
 
-#define POTEMKIN_SLIDE_HEAD_ACT_ID 0x78
-#define POTEMKIN_SLIDE_HEAD_RANGE 170
+#define POTEMKIN_HAMMER_FALL_ACT_ID 0x78
+#define POTEMKIN_HAMMER_FALL_RANGE 170
 #define FAUST_HACK_N_SLASH_FAIL_ACT_ID 190
 #define FAUST_HACK_N_SLASH_UNBLOCKABLE_ACT_ID 122
 #define FAUST_HACK_N_SLASH_RANGE 100
@@ -693,13 +693,13 @@ Hitbox HitboxOverlay::GetProximityBoxPlayer(const CharData* charObj)
 		return box;
 
 	if (charObj->charIndex == CharIndex_Potemkin &&
-		charObj->actId == POTEMKIN_SLIDE_HEAD_ACT_ID &&
+		charObj->actId == POTEMKIN_HAMMER_FALL_ACT_ID &&
 		charObj->mark != 0)
 	{
 		Hitbox push = GetPlayerPushBox(charObj);
-		box.offsetX = push.offsetX - POTEMKIN_SLIDE_HEAD_RANGE;
+		box.offsetX = push.offsetX - POTEMKIN_HAMMER_FALL_RANGE;
 		box.offsetY = push.offsetY;
-		box.width = push.width + POTEMKIN_SLIDE_HEAD_RANGE * 2;
+		box.width = push.width + POTEMKIN_HAMMER_FALL_RANGE * 2;
 		box.height = push.height;
 	}
 	else if (charObj->charIndex == CharIndex_Faust &&

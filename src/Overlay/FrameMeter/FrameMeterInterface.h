@@ -20,14 +20,15 @@ public:
     {
         LegendEntry(FM_Frame(FrameType_Neutral), "Neutral"),
         LegendEntry(FM_Frame(FrameType_Movement), "Movement"),
-        LegendEntry(FM_Frame(FrameType_Startup), "Startup/CH"),
+        LegendEntry(FM_Frame(FrameType_Startup), "Counter Hit, Startup"),
         LegendEntry(FM_Frame(FrameType_Active), "Active"),
         LegendEntry(FM_Frame(FrameType_Recovery), "Recovery"),
-        LegendEntry(FM_Frame(FrameType_BlockStun), "Block/Hit Stun"),
+        LegendEntry(FM_Frame(FrameType_BlockStun), "Blockstun, Hitstun"),
+        LegendEntry(FM_Frame(FrameType_TechableHitStun), "Techable Hitstun, Knocked Down"),
         LegendEntry(FM_Frame(FrameType_None, PrimaryFrameProperty_InvulnFull), "Full Invuln"),
         LegendEntry(FM_Frame(FrameType_None, PrimaryFrameProperty_InvulnStrike), "Strike Invuln"),
         LegendEntry(FM_Frame(FrameType_None, PrimaryFrameProperty_InvulnThrow), "Throw Invuln"),
-        LegendEntry(FM_Frame(FrameType_None, PrimaryFrameProperty_Armor), "Armor/Parry/Guard point"),
+        LegendEntry(FM_Frame(FrameType_None, PrimaryFrameProperty_Armor), "Guard point, Parry, Armor"),
         LegendEntry(FM_Frame(FrameType_None, PrimaryFrameProperty_SlashBack), "Slashback"),
         LegendEntry(FM_Frame(FrameType_None, PrimaryFrameProperty_Default, PrimaryFrameProperty_Default, SecondaryFrameProperty_FRC), "FRC")
     };

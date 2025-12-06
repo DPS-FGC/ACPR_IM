@@ -178,7 +178,18 @@ FrameType_ FrameMeter::DetermineFrameType(FM_GameState state, int index)
     }
     else if (player.Status.IsInHitstun())
     {
-        return FrameType_HitStun;
+        if (player.Status.KnockedDown())
+        {
+            return FrameType_KnockDownHitStun;
+        }
+        else if (player.Status.IsAirborne() && player.CommandFlags.Ukemi())
+        {
+            return FrameType_TechableHitStun;
+        }
+        else
+        {
+            return FrameType_HitStun;
+        }
     }
     else if (player.AttackFlags.IsInRecovery())
     {
