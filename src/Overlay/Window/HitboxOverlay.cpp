@@ -106,7 +106,7 @@ void HitboxOverlay::AfterDraw()
 
 #define LEGEND_Y_POS_PX 120
 #define LEGEND_ASSUMED_FRAME_METER_SIZE 80
-#define LEGEND_MAX_COLUMN_SIZE 6
+#define LEGEND_MAX_COLUMN_SIZE 7
 #define FONT_SIZE 24
 #define LEGEND_FONT_SIZE 16
 #define LABEL_BG 0x96000000
@@ -350,13 +350,13 @@ void HitboxOverlay::DrawFrameMeterLegend()
 	int borderThickness = 2 * windowHeight / GGXXACPR_SCREEN_HEIGHT_PIXELS;
 
 	int legendEntryVerticalSpacing = (int)max((LEGEND_FONT_SIZE * 2), pipHeight + borderThickness * 2 + 2);
-	int legendColumnSpacing = (int)(LEGEND_FONT_SIZE * 12);
+	int legendColumnSpacing = (int)(LEGEND_FONT_SIZE * 20);
 
 	// Background
 	ImVec2 pointA = ImVec2(xPos - LEGEND_FONT_SIZE, yPos - LEGEND_FONT_SIZE);
-	ImVec2 pointB = ImVec2(xPos + pipWidth * 2 + legendColumnSpacing + LEGEND_FONT_SIZE * 12, yPos - LEGEND_FONT_SIZE);
-	ImVec2 pointC = ImVec2(xPos + pipWidth * 2 + legendColumnSpacing + LEGEND_FONT_SIZE * 12, yPos + legendEntryVerticalSpacing * 5 + pipHeight + LEGEND_FONT_SIZE);
-	ImVec2 pointD = ImVec2(xPos - LEGEND_FONT_SIZE, yPos + legendEntryVerticalSpacing * 5 + pipHeight + LEGEND_FONT_SIZE);
+	ImVec2 pointB = ImVec2(xPos + pipWidth * 2 + legendColumnSpacing + LEGEND_FONT_SIZE * 15, yPos - LEGEND_FONT_SIZE);
+	ImVec2 pointC = ImVec2(xPos + pipWidth * 2 + legendColumnSpacing + LEGEND_FONT_SIZE * 15, yPos + legendEntryVerticalSpacing * 6 + pipHeight + LEGEND_FONT_SIZE);
+	ImVec2 pointD = ImVec2(xPos - LEGEND_FONT_SIZE, yPos + legendEntryVerticalSpacing * 6 + pipHeight + LEGEND_FONT_SIZE);
 
 	RenderRectFilled(pointA, pointB, pointC, pointD, LABEL_BG);
 
