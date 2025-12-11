@@ -209,6 +209,16 @@ void HitboxOverlay::DrawFrameMeter()
 						g_interfaces.frameMeterInterface.GetPrimaryPropertyColor((*frameArr)[i].PrimaryProperty2));
 				}
 			}
+			if ((*frameArr)[i].RunSum > 0)
+			{
+				//dim.xPos + i * dim.pipSpacing, dim.yPos + j * (dim.pipSpacingVertical + dim.pipHeight)
+				ImVec2 labelpos = ImVec2(xPos + i * pipSpacing, yPos + j * (FRAME_METER_VERTICAL_SPACING + pipHeight));
+				if ((*frameArr)[i].RunSum > 9 && i > 0)
+					labelpos = ImVec2(xPos + (i - 1) * pipSpacing, yPos + j * (FRAME_METER_VERTICAL_SPACING + pipHeight));
+
+				sprintf(frameMeterLabel, "%d", (*frameArr)[i].RunSum);
+				RenderText(labelpos, frameMeterLabel, 0xFFFFFFFF, FONT_SIZE);
+			}
 		}
 	}
 
@@ -258,39 +268,38 @@ void HitboxOverlay::DrawFrameMeter()
 	}
 
 	// Labels
-	ImVec2 p1LabelPosition = ImVec2(xPos + pipWidth, yPos - FRAME_METER_VERTICAL_SPACING -
-		entityPipHeight - borderThickness + 4 - (FONT_SIZE * 3 / 2));
-	ImVec2 p2LabelPosition = ImVec2(xPos + pipWidth, yPos + 2 * (FRAME_METER_VERTICAL_SPACING + pipHeight) +
-		entityPipHeight + borderThickness + -4);
+	ImVec2 p1LabelPosition = ImVec2(xPos, yPos - entityPipHeight - borderThickness - FONT_SIZE);
+	ImVec2 p2LabelPosition = ImVec2(xPos, coreYPos + pipHeight + entityPipHeight + borderThickness * 2);
+	float advantageXOffset = ImGui::CalcTextSize("Startup: -99   ").x + 2 * FONT_SIZE;
 
 	
 	// Semi-transparent label backgrounds
-	ImVec2 startupDimensions = ImGui::CalcTextSize("S: 99  A: -99");
+	ImVec2 startupDimensions = ImGui::CalcTextSize("Startup: -99   Advantage: -99  ");
 	pointA = ImVec2(p1LabelPosition.x - FONT_SIZE / 2, p1LabelPosition.y);
-	pointB = ImVec2(p1LabelPosition.x + startupDimensions.x + FONT_SIZE * 3 / 4, p1LabelPosition.y);
-	pointC = ImVec2(p1LabelPosition.x + startupDimensions.x + FONT_SIZE * 3 / 4, p1LabelPosition.y + startupDimensions.y + FONT_SIZE / 8);
-	pointD = ImVec2(p1LabelPosition.x - FONT_SIZE / 2, p1LabelPosition.y + startupDimensions.y + FONT_SIZE / 8);
+	pointB = ImVec2(p1LabelPosition.x + 2 * advantageXOffset + 2 * FONT_SIZE, p1LabelPosition.y);
+	pointC = ImVec2(p1LabelPosition.x + 2 * advantageXOffset + 2 * FONT_SIZE, p1LabelPosition.y + startupDimensions.y + FONT_SIZE / 2);
+	pointD = ImVec2(p1LabelPosition.x - FONT_SIZE / 2, p1LabelPosition.y + startupDimensions.y + FONT_SIZE / 2);
 
 	RenderRectFilled(pointA, pointB, pointC, pointD, LABEL_BG);
 
 	pointA = ImVec2(p2LabelPosition.x - FONT_SIZE / 2, p2LabelPosition.y);
-	pointB = ImVec2(p2LabelPosition.x + startupDimensions.x + FONT_SIZE * 3 / 4, p2LabelPosition.y);
-	pointC = ImVec2(p2LabelPosition.x + startupDimensions.x + FONT_SIZE * 3 / 4, p2LabelPosition.y + startupDimensions.y + FONT_SIZE / 8);
-	pointD = ImVec2(p2LabelPosition.x - FONT_SIZE / 2, p2LabelPosition.y + startupDimensions.y + FONT_SIZE / 8);
+	pointB = ImVec2(p2LabelPosition.x + 2 * advantageXOffset + 2 * FONT_SIZE, p2LabelPosition.y);
+	pointC = ImVec2(p2LabelPosition.x + 2 * advantageXOffset + 2 * FONT_SIZE, p2LabelPosition.y + startupDimensions.y + FONT_SIZE / 2);
+	pointD = ImVec2(p2LabelPosition.x - FONT_SIZE / 2, p2LabelPosition.y + startupDimensions.y + FONT_SIZE / 2);
 
 	RenderRectFilled(pointA, pointB, pointC, pointD, LABEL_BG);
 
 	// Startup
 	if (g_interfaces.frameMeterInterface.frameMeter.PlayerMeters[0].Startup >= 0)
-		sprintf(frameMeterLabel, "S: %d", g_interfaces.frameMeterInterface.frameMeter.PlayerMeters[0].Startup);
+		sprintf(frameMeterLabel, "Startup: %d", g_interfaces.frameMeterInterface.frameMeter.PlayerMeters[0].Startup);
 	else
-		sprintf(frameMeterLabel, "S: - ");
+		sprintf(frameMeterLabel, "Startup: - ");
 	RenderText(p1LabelPosition, frameMeterLabel, 0xFFFFFFFF, FONT_SIZE);
 
 	if (g_interfaces.frameMeterInterface.frameMeter.PlayerMeters[1].Startup >= 0)
-		sprintf(frameMeterLabel, "S: %d", g_interfaces.frameMeterInterface.frameMeter.PlayerMeters[1].Startup);
+		sprintf(frameMeterLabel, "Startup: %d", g_interfaces.frameMeterInterface.frameMeter.PlayerMeters[1].Startup);
 	else
-		sprintf(frameMeterLabel, "S: - ");
+		sprintf(frameMeterLabel, "Startup: - ");
 	RenderText(p2LabelPosition, frameMeterLabel, 0xFFFFFFFF, FONT_SIZE);
 
 
@@ -309,20 +318,20 @@ void HitboxOverlay::DrawFrameMeter()
 		p2AdvantageFontColor = 0xFF00FF00;
 	}
 
-	ImVec2 p1AdvLabelPosition = ImVec2(p1LabelPosition.x + (FONT_SIZE * 3), p1LabelPosition.y);
-	ImVec2 p2AdvLabelPosition = ImVec2(p2LabelPosition.x + (FONT_SIZE * 3), p2LabelPosition.y);
+	ImVec2 p1AdvLabelPosition = ImVec2(p1LabelPosition.x + advantageXOffset, p1LabelPosition.y);
+	ImVec2 p2AdvLabelPosition = ImVec2(p2LabelPosition.x + advantageXOffset, p2LabelPosition.y);
 
 	if (display)
-		sprintf(frameMeterLabel, "A: %d", g_interfaces.frameMeterInterface.frameMeter.PlayerMeters[0].Advantage);
+		sprintf(frameMeterLabel, "Advantage: %d", g_interfaces.frameMeterInterface.frameMeter.PlayerMeters[0].Advantage);
 	else
-		sprintf(frameMeterLabel, "A: - ");
+		sprintf(frameMeterLabel, "Advantage: - ");
 
 	RenderText(p1AdvLabelPosition, frameMeterLabel, p1AdvantageFontColor, FONT_SIZE);
 
 	if (display)
-		sprintf(frameMeterLabel, "A: %d", g_interfaces.frameMeterInterface.frameMeter.PlayerMeters[1].Advantage);
+		sprintf(frameMeterLabel, "Advantage: %d", g_interfaces.frameMeterInterface.frameMeter.PlayerMeters[1].Advantage);
 	else
-		sprintf(frameMeterLabel, "A: - ");
+		sprintf(frameMeterLabel, "Advantage: - ");
 
 	RenderText(p2AdvLabelPosition, frameMeterLabel, p2AdvantageFontColor, FONT_SIZE);
 

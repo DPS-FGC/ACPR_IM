@@ -96,6 +96,7 @@ struct FM_Frame
     uint16_t ActTimer = -1;
     uint8_t HitStop = 0;
     ActionStateFlags Status = 0x00000000;
+    int RunSum = 0;
 };
 
 struct FM_Meter
@@ -160,6 +161,7 @@ private:
     void UpdateIndividualMeter(FM_GameState state, int index);
     void UpdateIndividualEntityMeter(FM_GameState state, int index);
     void UpdateAdvantageByCountBack();
+    void UpdateRunSums(FM_Meter* meter);
     void AdvCountBackFromPlayer(FM_Meter* pMeterA, FM_Meter* pMeterB);
     void UpdateStartupByCountBackWithMoveData(FM_Player p, FM_Meter* pMeter);
     FM_Frame FrameAtOffset(FM_Meter* meter, int offset);

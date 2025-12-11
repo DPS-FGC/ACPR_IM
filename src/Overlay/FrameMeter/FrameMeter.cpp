@@ -110,6 +110,8 @@ int FrameMeter::Update(FM_GameState state, FM_Settings settings)
     UpdateStartupByCountBackWithMoveData(state.Player1, &PlayerMeters[0]);
     UpdateStartupByCountBackWithMoveData(state.Player2, &PlayerMeters[1]);
     UpdateAdvantageByCountBack();
+    UpdateRunSums(&PlayerMeters[1]);
+    UpdateRunSums(&PlayerMeters[0]);
 
     _index = (_index + 1) % METER_LENGTH;
     prevState = state;
@@ -506,4 +508,27 @@ void FrameMeter::ResetRecordedFrames()
 int FrameMeter::GetNumberOfRecordedFrames()
 {
     return recordedFrames.size();
+}
+
+#define MINIMUM_RUN_SUM 8
+void FrameMeter::UpdateRunSums(FM_Meter* meter)
+{
+    if (FrameAtOffset(meter, -1).Type == FrameAtOffset(meter, 0).Type)
+        return;
+
+    FrameType_ runType = FrameAtOffset(meter, -1).Type;
+
+    if (runType == FrameType_None || runType == FrameType_Neutral)
+        return;
+
+    int countingBack = 1;
+    while (countingBack < METER_LENGTH && FrameAtOffset(meter, -countingBack).Type == FrameAtOffset(meter, -countingBack - 1).Type)
+    {
+        countingBack++;
+    }
+
+    if (countingBack >= MINIMUM_RUN_SUM && countingBack < (METER_LENGTH - 3))
+    {
+        meter->FrameArr[AddToLoopingIndex(-1)].RunSum = countingBack;
+    }
 }
