@@ -262,6 +262,8 @@ void MainWindow::DrawHitboxOverlaySection() const
 	ImGui::Checkbox("Always draw throw box##throwbox", &g_interfaces.frameMeterInterface.settings.AlwaysDrawThrowRange);
 	ImGui::HoverTooltip("If on, always draws throw range in purple.");
 
+	ImGui::Checkbox("Show hitstun and untech meters:#hsdmeteron", &g_interfaces.frameMeterInterface.settings.DisplayHSDComboMeters);
+
 	ImGui::Checkbox("Show Frame Meter:##frameMeterOn", &g_interfaces.frameMeterInterface.settings.DisplayFrameMeter);
 	if (g_interfaces.frameMeterInterface.settings.DisplayFrameMeter)
 		ImGui::Checkbox("Show Legend##legendOn", &g_interfaces.frameMeterInterface.settings.DisplayFrameMeterLegend);

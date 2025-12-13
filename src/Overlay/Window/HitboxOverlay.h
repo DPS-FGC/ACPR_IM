@@ -42,6 +42,8 @@ private:
 	void DrawCleanHitBox(const CharData* charObj);
 	void DrawHitbox(Hitbox* drawbox, const CharData* charObj, const unsigned int rectBorderColor);
 	void DrawProximityBoxes(const CharData* charObj, bool isPlayer);
+	void DrawComboTimeMeter(const CharData* charObj);
+	void DrawUntechTimeMeter(const CharData* charObj);
 
 	Hitbox GetPlayerPushBox(const CharData* charObj);
 	Hitbox GetPlayerThrowBox(const CharData* charObj);

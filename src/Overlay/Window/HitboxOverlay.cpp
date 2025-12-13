@@ -25,6 +25,13 @@ void HitboxOverlay::Update()
 	ImGui::Begin("##HitboxOverlay", nullptr, m_overlayWindowFlags);
 
 	Draw();
+	if (g_interfaces.frameMeterInterface.settings.DisplayHSDComboMeters)
+	{
+		DrawComboTimeMeter(g_interfaces.Player1.GetData());
+		DrawUntechTimeMeter(g_interfaces.Player1.GetData());
+		DrawComboTimeMeter(g_interfaces.Player2.GetData());
+		DrawUntechTimeMeter(g_interfaces.Player2.GetData());
+	}
 	if (g_interfaces.frameMeterInterface.settings.DisplayFrameMeter)
 	{
 		DrawFrameMeter();
@@ -415,6 +422,143 @@ void HitboxOverlay::DrawFrameMeterLegend()
 		RenderText(pos, g_interfaces.frameMeterInterface.entries[i].Label.c_str(), 0xFFFFFFFF, LEGEND_FONT_SIZE);
 
 	}
+}
+
+#define HSD_METER_X -0.95f
+#define HSD_METER_Y 0.1f
+#define HSD_METER_W 0.05f
+#define HSD_METER_H 0.4f
+#define UNTECH_METER_COLOR 0xFF00FFFF
+#define HSD_THRESHOLD_1 (18.0f / 86.0f)
+#define HSD_THRESHOLD_2 (30.0f / 86.0f)
+#define HSD_THRESHOLD_3 (42.0f / 86.0f)
+#define HSD_THRESHOLD_4 (60.0f / 86.0f)
+#define COMBO_TIME_MAX 860.0f
+#define HSD_COLOR_100 0xFF0000FF
+#define HSD_COLOR_95 0xFF00FF00
+#define HSD_COLOR_90 0xFFFFFF00
+#define HSD_COLOR_80 0xFFFF8000
+#define HSD_COLOR_70 0xFFFF0000
+void HitboxOverlay::DrawComboTimeMeter(const CharData* charObj)
+{
+	RECT rect;
+	GetClientRect(g_gameProc.hWndGameWindow, &rect);
+
+	int windowWidth = rect.right - rect.left;
+	int windowHeight = rect.bottom - rect.top;
+
+	int screenHeight = windowHeight;
+	int screenWidth = windowHeight * 4 / 3;
+
+	int borderThickness = 2 * windowHeight / GGXXACPR_SCREEN_HEIGHT_PIXELS;
+
+	float f1 = 1 - 2 * charObj->playerID;
+	float f2 = -0.05f * charObj->playerID;
+
+	float meterX = windowWidth / 2.0 + (HSD_METER_X * f1 + f2) * 0.5f * screenWidth;
+	float meterY = windowHeight / 2.0 - HSD_METER_Y * 0.5f * screenHeight;
+	float meterW = HSD_METER_W * 0.5 * screenWidth;
+	float meterH = HSD_METER_H * 0.5 * screenHeight;
+
+	ImVec2 pointA = ImVec2(meterX - borderThickness, meterY - meterH - borderThickness);
+	ImVec2 pointB = ImVec2(meterX + meterW + borderThickness, meterY - meterH - borderThickness);
+	ImVec2 pointC = ImVec2(meterX + meterW + borderThickness, meterY + borderThickness);
+	ImVec2 pointD = ImVec2(meterX - borderThickness, meterY + borderThickness);
+
+	const unsigned int rectBorderColor = 0xFF000000;
+	RenderRect(pointA, pointB, pointC, pointD, rectBorderColor, borderThickness);
+
+	const unsigned char transparency = 0xFF * m_rectFillTransparency;
+	unsigned int clearedTransparencyBits = (rectBorderColor & ~0xFF000000);
+	unsigned int transparencyPercentage = ((int)transparency << 24) & 0xFF000000;
+	const unsigned int rectFillColor = clearedTransparencyBits | transparencyPercentage;
+	RenderRectFilled(pointA, pointB, pointC, pointD, rectFillColor);
+
+	float fillValue = charObj->extraData->damageTime / COMBO_TIME_MAX;
+
+	pointA = ImVec2(meterX, 0.0f);
+	pointB = ImVec2(meterX + meterW, 0.0f);
+	pointC = ImVec2(meterX + meterW, 0.0f);
+	pointD = ImVec2(meterX, 0.0f);
+
+	if (fillValue < HSD_THRESHOLD_1)
+	{
+		pointB.y = pointA.y = meterY - meterH * (1 - fillValue);
+		pointD.y = pointC.y = meterY - meterH * (1 - HSD_THRESHOLD_1);
+		RenderRectFilled(pointA, pointB, pointC, pointD, HSD_COLOR_100);
+	}
+	if (fillValue < HSD_THRESHOLD_2)
+	{
+		pointB.y = pointA.y = meterY - meterH * (1 - max(fillValue, HSD_THRESHOLD_1));
+		pointD.y = pointC.y = meterY - meterH * (1 - HSD_THRESHOLD_2);
+		RenderRectFilled(pointA, pointB, pointC, pointD, HSD_COLOR_95);
+	}
+	if (fillValue < HSD_THRESHOLD_3)
+	{
+		pointB.y = pointA.y = meterY - meterH * (1 - max(fillValue, HSD_THRESHOLD_2));
+		pointD.y = pointC.y = meterY - meterH * (1 - HSD_THRESHOLD_3);
+		RenderRectFilled(pointA, pointB, pointC, pointD, HSD_COLOR_90);
+	}
+	if (fillValue < HSD_THRESHOLD_4)
+	{
+		pointB.y = pointA.y = meterY - meterH * (1 - max(fillValue, HSD_THRESHOLD_3));
+		pointD.y = pointC.y = meterY - meterH * (1 - HSD_THRESHOLD_4);
+		RenderRectFilled(pointA, pointB, pointC, pointD, HSD_COLOR_80);
+	}
+	
+	pointB.y = pointA.y = meterY - meterH * (1 - max(fillValue, HSD_THRESHOLD_4));
+	pointD.y = pointC.y = meterY;
+	RenderRectFilled(pointA, pointB, pointC, pointD, HSD_COLOR_70);
+	
+}
+
+void HitboxOverlay::DrawUntechTimeMeter(const CharData* charObj)
+{
+	RECT rect;
+	GetClientRect(g_gameProc.hWndGameWindow, &rect);
+
+	int windowWidth = rect.right - rect.left;
+	int windowHeight = rect.bottom - rect.top;
+
+	int screenHeight = windowHeight;
+	int screenWidth = windowHeight * 4 / 3;
+
+	int borderThickness = 2 * windowHeight / GGXXACPR_SCREEN_HEIGHT_PIXELS;
+
+	float f1 = 1 - 2 * charObj->playerID;
+	float f2 = -0.05f * charObj->playerID;
+
+	float meterX = windowWidth / 2.0 + ((HSD_METER_X + 0.1f) * f1 + f2) * 0.5f * screenWidth;
+	float meterY = windowHeight / 2.0 - HSD_METER_Y * 0.5f * screenHeight;
+	float meterW = HSD_METER_W * 0.5 * screenWidth;
+	float meterH = HSD_METER_H * 0.5 * screenHeight;
+
+	ImVec2 pointA = ImVec2(meterX - borderThickness, meterY - meterH - borderThickness);
+	ImVec2 pointB = ImVec2(meterX + meterW + borderThickness, meterY - meterH - borderThickness);
+	ImVec2 pointC = ImVec2(meterX + meterW + borderThickness, meterY + borderThickness);
+	ImVec2 pointD = ImVec2(meterX - borderThickness, meterY + borderThickness);
+
+	const unsigned int rectBorderColor = 0xFF000000;
+	RenderRect(pointA, pointB, pointC, pointD, rectBorderColor, borderThickness);
+
+	const unsigned char transparency = 0xFF * m_rectFillTransparency;
+	unsigned int clearedTransparencyBits = (rectBorderColor & ~0xFF000000);
+	unsigned int transparencyPercentage = ((int)transparency << 24) & 0xFF000000;
+	const unsigned int rectFillColor = clearedTransparencyBits | transparencyPercentage;
+	RenderRectFilled(pointA, pointB, pointC, pointD, rectFillColor);
+
+	float fillValue = charObj->extraData->downTimer / 59.0f;
+
+	if (fillValue > 0)
+	{
+		pointA = ImVec2(meterX, meterY - meterH * fillValue);
+		pointB = ImVec2(meterX + meterW, meterY - meterH * fillValue);
+		pointC = ImVec2(meterX + meterW, meterY);
+		pointD = ImVec2(meterX, meterY);
+
+		RenderRectFilled(pointA, pointB, pointC, pointD, UNTECH_METER_COLOR);
+	}
+
 }
 
 bool HitboxOverlay::IsOwnerEnabled(byte playerID)

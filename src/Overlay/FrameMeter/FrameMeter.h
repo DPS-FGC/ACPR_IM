@@ -55,6 +55,7 @@ enum SecondaryFrameProperty_
 struct FM_Settings
 {
     bool DisplayHitboxes = true;
+    bool DisplayHSDComboMeters = true;
     bool DisplayFrameMeter = true;
     bool AlwaysDrawThrowRange = false;
     bool DisplayFrameMeterLegend = false;
