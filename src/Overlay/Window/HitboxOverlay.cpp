@@ -20,6 +20,10 @@ void HitboxOverlay::Update()
 		return;
 	}
 
+	//Ensure player data was initialized before drawing overlay
+	if (!g_interfaces.Player1.GetData()->extraData || !g_interfaces.Player2.GetData()->extraData)
+		return;
+
 	BeforeDraw();
 
 	ImGui::Begin("##HitboxOverlay", nullptr, m_overlayWindowFlags);

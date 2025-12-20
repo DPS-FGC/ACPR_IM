@@ -170,7 +170,14 @@ FrameType_ FrameMeter::DetermineFrameType(FM_GameState state, int index)
     {
         return FrameType_ActiveThrow;
     }
-    else if (hasHitbox && !player.Status.DisableHitboxes())
+    else if (PlayerHasActiveFrame(player))
+    {
+        return FrameType_Active;
+    }
+    //Check for Potemkin slide head
+    else if (player.CharId == CharIndex_Potemkin &&
+        player.ActionId == 181 &&
+        player.ActionHeaderFlags == 0x10102015)
     {
         return FrameType_Active;
     }
@@ -339,8 +346,13 @@ FrameType_ FrameMeter::DetermineEntityFrameType(FM_GameState state, int index)
         {
             if (!state.Entities[i].Status.DisableHitboxes() && state.Entities[i].HitboxSet[j].type == HitboxType_Hitbox)
                 numHitboxes++;
-            if (!state.Entities[i].Status.DisableHitboxes() && state.Entities[i].HitboxSet[j].type == HitboxType_Hitbox)
+            if (!state.Entities[i].Status.DisableHurtboxes() && state.Entities[i].HitboxSet[j].type == HitboxType_Hurtbox)
                 numHurtboxes++;
+        }
+        for (int j = 0; j < state.Entities[i].HitboxExtraSet.size(); j++)
+        {
+            if (!state.Entities[i].Status.DisableHitboxes() && state.Entities[i].HitboxExtraSet[j].type == HitboxType_Hitbox)
+                numHitboxes++;
         }
     }
 
@@ -457,18 +469,24 @@ int FrameMeter::AddToLoopingIndex(int offset)
 
 bool FrameMeter::PlayerHasActiveFrame(FM_Player player)
 {
-    bool hasHitbox = false;
+    if (player.HitboxSet.empty() || player.Status.DisableHitboxes())
+        return false;
+
     for (int i = 0; i < player.HitboxSet.size(); i++)
     {
         if (player.HitboxSet[i].type == HitboxType_Hitbox)
+            return true;
+        else if (player.HitboxSet[i].type == HitboxType_Extra)
         {
-            hasHitbox = true;
-            break;
+            if (player.HitboxExtraSet.empty() || player.HitboxExtraSet.size() <= i)
+                continue;
+
+            if (player.HitboxExtraSet[i].type == HitboxType_Hitbox)
+                return true;
         }
     }
 
-    return hasHitbox && !player.Status.DisableHitboxes() ||
-        player.Mark == 1 && MoveData::IsActiveByMark(player.CharId, player.ActionId);
+    return player.Mark == 1 && MoveData::IsActiveByMark(player.CharId, player.ActionId);
 }
 
 void FrameMeter::PushMeterState()

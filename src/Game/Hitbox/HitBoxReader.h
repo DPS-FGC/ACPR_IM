@@ -8,4 +8,5 @@ class HitboxReader
 {
 public:
 	static std::vector<Hitbox> getHitboxes(const CharData* charObj);
+	static std::vector<Hitbox> getExtraHitboxes(const CharData* charObj);
 };

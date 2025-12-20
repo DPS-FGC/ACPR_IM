@@ -167,7 +167,7 @@ private:
     void UpdateStartupByCountBackWithMoveData(FM_Player p, FM_Meter* pMeter);
     FM_Frame FrameAtOffset(FM_Meter* meter, int offset);
     int AddToLoopingIndex(int offset);
-    bool PlayerHasActiveFrame(FM_Player player);
+    static bool PlayerHasActiveFrame(FM_Player player);
 
     std::stack<FM_MeterState> recordedFrames;
 

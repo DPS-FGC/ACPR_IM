@@ -157,7 +157,9 @@ struct FM_Player
     FM_PlayerExtra Extra;
     uint8_t HitstopCounter = 0;
     std::vector<Hitbox> HitboxSet;
+    std::vector<Hitbox> HitboxExtraSet;
     uint8_t Mark = 0;
+    uint32_t ActionHeaderFlags = 0;
 };
 
 struct FM_Entity
@@ -165,6 +167,7 @@ struct FM_Entity
     ActionStateFlags Status = 0;
     uint8_t PlayerIndex = 0;
     std::vector<Hitbox> HitboxSet;
+    std::vector<Hitbox> HitboxExtraSet;
 };
 
 struct FM_GameState

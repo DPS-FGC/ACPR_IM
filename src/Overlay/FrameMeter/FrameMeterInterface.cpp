@@ -87,7 +87,9 @@ FM_GameState FrameMeterInterface::GetGameState()
         },
         g_interfaces.Player1.GetData()->hitstopTimer,
         HitboxReader::getHitboxes(g_interfaces.Player1.GetData()),
-        g_interfaces.Player1.GetData()->mark
+        HitboxReader::getExtraHitboxes(g_interfaces.Player1.GetData()),
+        g_interfaces.Player1.GetData()->mark,
+        g_interfaces.Player1.GetData()->actionHeaderFalgs,
     };
 
     FM_Player player2 = {
@@ -107,7 +109,9 @@ FM_GameState FrameMeterInterface::GetGameState()
         },
         g_interfaces.Player2.GetData()->hitstopTimer,
         HitboxReader::getHitboxes(g_interfaces.Player2.GetData()),
-        g_interfaces.Player2.GetData()->mark
+        HitboxReader::getExtraHitboxes(g_interfaces.Player2.GetData()),
+        g_interfaces.Player2.GetData()->mark,
+        g_interfaces.Player1.GetData()->actionHeaderFalgs,
     };
 
     std::vector<FM_Entity> entities;
@@ -121,7 +125,8 @@ FM_GameState FrameMeterInterface::GetGameState()
             entities.push_back({
                 ActionStateFlags(pEntity->status),
                 pEntity->playerID,
-                HitboxReader::getHitboxes(pEntity)
+                HitboxReader::getHitboxes(pEntity),
+                HitboxReader::getExtraHitboxes(pEntity),
                 });
             pEntity = pEntity->nextEntity;
             isEntityActive = pEntity->charIndex > 0;
