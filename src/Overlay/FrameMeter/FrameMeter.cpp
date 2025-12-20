@@ -151,13 +151,6 @@ FrameType_ FrameMeter::DetermineFrameType(FM_GameState state, int index)
     FM_Player player = index == 0 ? state.Player1 : state.Player2;
     int cmdGrabId = index == 0 ? state.GlobalFlags.P1CommandGrabRange : state.GlobalFlags.P2CommandGrabRange;
 
-    bool hasHitbox = false;
-    for (int i = 0; i < player.HitboxSet.size(); i++)
-    {
-        if (player.HitboxSet[i].type == HitboxType_Hitbox)
-            hasHitbox = true;
-    }
-
     if (player.Mark == 1 && MoveData::IsActiveByMark(player.CharId, player.ActionId))
     {
         return FrameType_ActiveThrow;
@@ -476,14 +469,11 @@ bool FrameMeter::PlayerHasActiveFrame(FM_Player player)
     {
         if (player.HitboxSet[i].type == HitboxType_Hitbox)
             return true;
-        else if (player.HitboxSet[i].type == HitboxType_Extra)
-        {
-            if (player.HitboxExtraSet.empty() || player.HitboxExtraSet.size() <= i)
-                continue;
-
-            if (player.HitboxExtraSet[i].type == HitboxType_Hitbox)
-                return true;
-        }
+    }
+    for (int i = 0; i < player.HitboxExtraSet.size(); i++)
+    {
+        if (player.HitboxExtraSet[i].type == HitboxType_Hitbox)
+            return true;
     }
 
     return player.Mark == 1 && MoveData::IsActiveByMark(player.CharId, player.ActionId);
