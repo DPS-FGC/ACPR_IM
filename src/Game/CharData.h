@@ -158,7 +158,7 @@ struct CharData
 	int32_t posX; //0xB0.
 	int32_t posY; //0xB4.
 	char pad_B8[44]; //0xB8.
-	uint32_t actionHeaderFalgs; //0xE4.
+	uint32_t actionHeaderFlags; //0xE4.
 	char pad_E8[20]; //0xE8.
 	int8_t pad_FC; //0xFC.
 	uint8_t hitstopTimer; //0xFD.

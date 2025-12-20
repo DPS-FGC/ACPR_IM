@@ -89,7 +89,7 @@ FM_GameState FrameMeterInterface::GetGameState()
         HitboxReader::getHitboxes(g_interfaces.Player1.GetData()),
         HitboxReader::getExtraHitboxes(g_interfaces.Player1.GetData()),
         g_interfaces.Player1.GetData()->mark,
-        g_interfaces.Player1.GetData()->actionHeaderFalgs,
+        g_interfaces.Player1.GetData()->actionHeaderFlags,
     };
 
     FM_Player player2 = {
@@ -111,7 +111,7 @@ FM_GameState FrameMeterInterface::GetGameState()
         HitboxReader::getHitboxes(g_interfaces.Player2.GetData()),
         HitboxReader::getExtraHitboxes(g_interfaces.Player2.GetData()),
         g_interfaces.Player2.GetData()->mark,
-        g_interfaces.Player1.GetData()->actionHeaderFalgs,
+        g_interfaces.Player1.GetData()->actionHeaderFlags,
     };
 
     std::vector<FM_Entity> entities;

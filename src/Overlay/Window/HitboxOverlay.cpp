@@ -752,7 +752,7 @@ void HitboxOverlay::DrawCollisionAreas(const CharData* charObj, const ImVec2 pla
 	//Special check for Slide head
 	if (charObj->charIndex == CharIndex_Potemkin &&
 		charObj->actId == 181 && //Slide head animation id
-		charObj->actionHeaderFalgs == 0x10102015 && //Falgs for unblockable section of slide head
+		charObj->actionHeaderFlags == 0x10102015 && //Falgs for unblockable section of slide head
 		charObj->hitboxExtraArray != NULL)
 	{
 		Hitbox drawbox = ScaleHitbox((Hitbox*)charObj->hitboxExtraArray, charObj);
