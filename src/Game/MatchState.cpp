@@ -151,9 +151,30 @@ void MatchState::OnUpdate()
 		g_interfaces.trainerInterface.change_flags = 0x00;
 		if (!g_gameVals.isFrameFrozen && !*g_gameVals.pInPauseMenu)
 			g_interfaces.frameMeterInterface.Update();
+		if (g_gameVals.GetGameMode() != GameMode_Online)
+		{
+			int bgflags = 0x00000000;
+			if (g_interfaces.frameMeterInterface.settings.DisableHud)
+			{
+				bgflags = bgflags | 0x02;
+				if (g_gameVals.GetGameMode() == GameMode_Training)
+					*g_gameVals.pTrainingInfoDisplayState = 0;
+			}
+
+			if (g_interfaces.frameMeterInterface.settings.DisableBackground)
+				bgflags = bgflags | 0x08;
+
+			if (bgflags)
+				*g_gameVals.pBackgroundState = bgflags;
+			else if (g_interfaces.frameMeterInterface.restoreBackground || g_interfaces.frameMeterInterface.restoreHUD)
+				*g_gameVals.pBackgroundState = 0x04; //Restore default background
+			if (g_interfaces.frameMeterInterface.restoreHUD)
+				*g_gameVals.pTrainingInfoDisplayState = *g_gameVals.pTrainingInfoDisplayStateMenu;
+		}
 	}
 	if (g_gameVals.isFrameFrozen)
 	{
+		*g_gameVals.pTrainingInfoDisplayState = 0;
 		if (g_gameVals.framesToReach > *g_gameVals.pframe_count_minus_1_P1)
 		{
 			*g_gameVals.pInPauseMenu = 0;
@@ -171,6 +192,8 @@ void MatchState::OnUpdate()
 	else if (g_gameVals.isFrameFrozenPrev)
 	{
 		*g_gameVals.pInPauseMenu = 0;
+		if (!g_interfaces.frameMeterInterface.settings.DisableHud)
+			*g_gameVals.pTrainingInfoDisplayState = *g_gameVals.pTrainingInfoDisplayStateMenu;
 	}
 	g_gameVals.isFrameFrozenPrev = g_gameVals.isFrameFrozen;
 

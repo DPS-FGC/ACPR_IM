@@ -199,6 +199,10 @@ struct gameVals_t
 	Room* pRoom;
 	int* pSelectedRoomMember;
 	int* pNumberOfPlayersInRoom;
+
+	int* pBackgroundState;
+	int* pTrainingInfoDisplayState;
+	int* pTrainingInfoDisplayStateMenu;
 };
 
 struct gameProc_t

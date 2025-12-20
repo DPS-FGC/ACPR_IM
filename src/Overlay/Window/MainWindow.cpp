@@ -276,6 +276,20 @@ void MainWindow::DrawHitboxOverlaySection() const
 	ImGui::HoverTooltip("Will not pause frame meter during super flash.");
 	ImGui::Checkbox("Draw inifinite height##drawinfheight", &g_interfaces.frameMeterInterface.settings.DrawInfiniteHeight);
 	ImGui::HoverTooltip("If on, draws horizontal proximity boxes along the entire screen.");
+
+	g_interfaces.frameMeterInterface.restoreHUD = false;
+	g_interfaces.frameMeterInterface.restoreHUD = g_interfaces.frameMeterInterface.restoreHUD ||
+		ImGui::Checkbox("Disable HUD##disablehud", &g_interfaces.frameMeterInterface.settings.DisableHud);
+	g_interfaces.frameMeterInterface.restoreHUD = g_interfaces.frameMeterInterface.restoreHUD &&
+		!g_interfaces.frameMeterInterface.settings.DisableHud;
+	ImGui::HoverTooltip("Disables heads up display.");
+	
+	g_interfaces.frameMeterInterface.restoreBackground = false;
+	g_interfaces.frameMeterInterface.restoreBackground = g_interfaces.frameMeterInterface.restoreBackground ||
+		ImGui::Checkbox("Disable background##disablebg", &g_interfaces.frameMeterInterface.settings.DisableBackground);
+	g_interfaces.frameMeterInterface.restoreBackground = g_interfaces.frameMeterInterface.restoreBackground &&
+		!g_interfaces.frameMeterInterface.settings.DisableBackground;
+	ImGui::HoverTooltip("Sets background to black.");
 }
 
 void MainWindow::DrawLinkButtons() const

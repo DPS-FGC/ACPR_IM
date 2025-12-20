@@ -516,6 +516,18 @@ bool placeHooks_acpr()
 	g_gameVals.pPlayerNameOnline[0] = (char*)HookManager::GetBytesFromAddr("GetPlayerNameOnline", 4, 4) + 0x4C;
 	g_gameVals.pPlayerNameOnline[1] = (char*)HookManager::GetBytesFromAddr("GetPlayerNameOnline", 4, 4) + 0x6C;
 
+	HookManager::RegisterHook("GetBackgroundState", "\x8B\x0D\x00\x00\x00\x00\xF6\xC1\x01\x0F\x84\x85\x00\x00\x00",
+		"xx????xxxxxxxxx", 6);
+	g_gameVals.pBackgroundState = (int*)HookManager::GetBytesFromAddr("GetBackgroundState", 2, 4);
+
+	HookManager::RegisterHook("GetTrainingInfoDisplayState", "\xA1\x00\x00\x00\x00\x33\xD2\x83\xF8\x02",
+		"x????xxxxx", 5);
+	g_gameVals.pTrainingInfoDisplayState = (int*)HookManager::GetBytesFromAddr("GetTrainingInfoDisplayState", 1, 4);
+
+	HookManager::RegisterHook("GetTrainingInfoDisplayStateMenu", "\x05\x00\x00\x00\x00\xE8\x5E\xEB\xFF\xFF",
+		"x????xxxxx", 5);
+	g_gameVals.pTrainingInfoDisplayStateMenu = (int*)(HookManager::GetBytesFromAddr("GetTrainingInfoDisplayStateMenu", 1, 4) + 0x3C);
+
 	return true;
 }
 

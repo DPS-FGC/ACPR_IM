@@ -64,6 +64,8 @@ struct FM_Settings
     bool AdvancedMode = false;
     bool AllowRewindingInReplay = false;
     bool DrawInfiniteHeight = false;
+    bool DisableHud = false;
+    bool DisableBackground = false;
 };
 
 struct FM_Frame

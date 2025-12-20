@@ -16,6 +16,8 @@ class FrameMeterInterface
 public:
     FrameMeter frameMeter;
     FM_Settings settings;
+    bool restoreBackground = false;
+    bool restoreHUD = false;
     std::vector<LegendEntry> entries =
     {
         LegendEntry(FM_Frame(FrameType_Neutral), "Neutral"),
