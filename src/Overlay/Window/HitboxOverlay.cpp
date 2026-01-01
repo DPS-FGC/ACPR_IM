@@ -554,7 +554,7 @@ void HitboxOverlay::DrawUntechTimeMeter(const CharData* charObj)
 	const unsigned int rectFillColor = clearedTransparencyBits | transparencyPercentage;
 	RenderRectFilled(pointA, pointB, pointC, pointD, rectFillColor);
 
-	float fillValue = charObj->extraData->downTimer / 59.0f;
+	float fillValue = min(charObj->extraData->downTimer / 59.0f, 1.0f);
 
 	if (fillValue > 0)
 	{
@@ -913,7 +913,7 @@ bool HitboxOverlay::GetProximityBoxEntity(const CharData* charObj, Hitbox& box)
 
 	auto halfHeight = m_rectThickness * 150.0f;
 
-	if (charObj->charIndex == ROBO_KY_MAT_ID)
+	if (charObj->charIndex == ROBO_KY_MAT_ID && charObj->actId == 13)
 	{
 		box.offsetX = -ROBO_KY_MAT_COLLISION_RANGE;
 		box.offsetY = -halfHeight;
