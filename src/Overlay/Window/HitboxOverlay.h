@@ -35,6 +35,7 @@ private:
 	void DrawFrameMeter();
 	void DrawFrameMeterLegend();
 	void DrawOriginLine(ImVec2 worldPos, float rotationRad);
+	void DrawPivot(const CharData* charObj);
 	void DrawCollisionAreas(const CharData* charObj, const ImVec2 playerWorldPos);
 	void DrawPlayerPushboxes(const CharData* charObj);
 	void DrawPlayerGrabBox(const CharData* charObj, bool drawOverride);

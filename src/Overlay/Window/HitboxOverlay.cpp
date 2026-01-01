@@ -72,6 +72,7 @@ void HitboxOverlay::Draw()
 		DrawPlayerGrabBox(g_interfaces.Player1.GetData(), g_interfaces.frameMeterInterface.settings.AlwaysDrawThrowRange);
 		DrawCleanHitBox(g_interfaces.Player1.GetData());
 		DrawProximityBoxes(g_interfaces.Player1.GetData(), true);
+		DrawPivot(g_interfaces.Player1.GetData());
 	}
 
 	if (drawCharacterHitbox[1])
@@ -82,6 +83,7 @@ void HitboxOverlay::Draw()
 		DrawPlayerGrabBox(g_interfaces.Player2.GetData(), g_interfaces.frameMeterInterface.settings.AlwaysDrawThrowRange);
 		DrawCleanHitBox(g_interfaces.Player2.GetData());
 		DrawProximityBoxes(g_interfaces.Player2.GetData(), true);
+		DrawPivot(g_interfaces.Player2.GetData());
 	}
 
 	if (*g_gameVals.entityCount > 0)
@@ -95,6 +97,7 @@ void HitboxOverlay::Draw()
 				entityWorldPos = CalculateObjWorldPosition(pEntity);
 				DrawCollisionAreas(pEntity, entityWorldPos);
 				DrawProximityBoxes(pEntity, false);
+				DrawPivot(pEntity);
 			}
 			pEntity = pEntity->nextEntity;
 			isEntityActive = pEntity->charIndex > 0;
@@ -642,6 +645,22 @@ void HitboxOverlay::DrawOriginLine(ImVec2 worldPos, float rotationRad)
 	verticalFrom = CalculateScreenPosition(verticalFrom);
 	verticalTo = CalculateScreenPosition(verticalTo);
 	RenderLine(verticalFrom, verticalTo, colorOrange, 3);
+}
+
+#define PIVOTLENGTH 15
+#define PIVOTTHICKNESS 3.0f
+#define PIVOTCOLOR 0xFF800080
+void HitboxOverlay::DrawPivot(const CharData* charObj)
+{
+	ImVec2 origin = CalculateScreenPosition(ImVec2(charObj->posX, charObj->posY));
+
+	ImVec2 start = ImVec2(origin.x - PIVOTLENGTH, origin.y);
+	ImVec2 end = ImVec2(origin.x + PIVOTLENGTH, origin.y);
+	RenderLine(start, end, PIVOTCOLOR, PIVOTTHICKNESS);
+
+	start = ImVec2(origin.x, origin.y - PIVOTLENGTH);
+	end = ImVec2(origin.x, origin.y + PIVOTLENGTH);
+	RenderLine(start, end, PIVOTCOLOR, PIVOTTHICKNESS);
 }
 
 Hitbox HitboxOverlay::ScaleHitbox(const Hitbox* hitbox, const CharData* p)
