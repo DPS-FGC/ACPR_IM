@@ -745,7 +745,10 @@ void HitboxOverlay::DrawCollisionAreas(const CharData* charObj, const ImVec2 pla
 		}
 		else
 		{
-			if ((entry.type == HitboxType_Hurtbox && (charObj->status & 0x0080) > 0) ||
+			//Special case for Vanom's pool balls. They have hurtboxes that are used to activate them.
+			//Check for disable hitbox state so that the hurtbox is only drawn when the ball is idle.
+			if ((entry.type == HitboxType_Hurtbox && ((charObj->status & 0x0080) > 0 &&
+						!(charObj->charIndex == 0x22 && (charObj->status & 0x0040) > 0))) ||
 				(entry.type == HitboxType_Hitbox && (charObj->status & 0x0040) > 0))
 				continue;
 		}
@@ -898,6 +901,8 @@ Hitbox HitboxOverlay::GetProximityBoxPlayer(const CharData* charObj)
 #define TESTAMENT_HITOMI_ACTIVATION_RANGE_PR 55
 #define TESTAMENT_HITOMI_ACTIVATION_RANGE_AC 70
 #define MAX_DISPLAY_HEIGHT 1000
+#define MILLIA_PIN_ID 46
+#define MILLIA_PIN_PICKUP_RANGE 100
 #define FAUST_ENTITY_ID 0x2B
 #define FAUST_DONUT_PICKUP_ACT_ID 18
 #define FAUST_CHOCOLATE_PICKUP_ACT_ID 19
@@ -947,6 +952,14 @@ bool HitboxOverlay::GetProximityBoxEntity(const CharData* charObj, Hitbox& box)
 		box.offsetY = -EDDIE_PUDDLE_VERTICAL_RANGE;
 		box.width = charObj->mark * 2;
 		box.height = EDDIE_PUDDLE_VERTICAL_RANGE * 2;
+		return true;
+	}
+	else if (charObj->charIndex == MILLIA_PIN_ID && charObj->posY == 0)
+	{
+		box.offsetX = -MILLIA_PIN_PICKUP_RANGE;
+		box.offsetY = -halfHeight;
+		box.width = MILLIA_PIN_PICKUP_RANGE * 2;
+		box.height = halfHeight * 2;
 		return true;
 	}
 
