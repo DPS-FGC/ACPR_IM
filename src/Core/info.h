@@ -1,6 +1,6 @@
 #pragma once
 
-#define MOD_VERSION "v1.2.0"
+#define MOD_VERSION "v1.3.0"
 #define MOD_VERSION_NUM	MOD_VERSION " online edition"
 #define MOD_WINDOW_TITLE "ACPR Improvement Mod"
 

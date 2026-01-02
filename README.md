@@ -71,11 +71,14 @@ Custom palette files are saved under ACPR_IM/Palettes/_character name_
 
 ### Game overlay
 Adds an overlay to the game which displays hitboxes and a frame meter.  
-The entire logic for the overlay is taken directly from [GGXXACPROverlay by YouKnow232](https://github.com/YouKnow232/ggxxacpr_overlay/tree/main) ver 1.3.1-beta.
+The entire logic for the overlay is taken directly from [GGXXACPROverlay by YouKnow232](https://github.com/YouKnow232/ggxxacpr_overlay/tree/main) ver 2.3.0.
 
 The frame meter works in replay mode in two ways:  
 By default, it is reset every time the replay is rewinded.  
 Checking the `Allow rewinding` checkbox will enable rewinding the frame meter when the replay is rewinded. It requires slightly more memory and is therefore disabled by default.
+
+Settings for the overlay such as hitbox border thickness, transparency and colors for different elements can be  
+constrolled using settings.ini or from the mod menu.
 
 ### CBR AI
 Allows recording and training custom AI based on matches with real players.  
