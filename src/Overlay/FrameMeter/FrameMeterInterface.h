@@ -18,6 +18,7 @@ public:
     FM_Settings settings;
     bool restoreBackground = false;
     bool restoreHUD = false;
+    bool isOpen = false;
     std::vector<LegendEntry> entries =
     {
         LegendEntry(FM_Frame(FrameType_Neutral), "Neutral"),

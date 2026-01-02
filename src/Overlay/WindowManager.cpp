@@ -21,6 +21,12 @@
 
 int keyToggleMainWindow;
 int keyToggleRoomWindow;
+int keyToggleOverlay;
+int keyToggleLegend;
+int keyToggleHSD;
+int keyToggleFM;
+int keyPauseGame;
+int keyFrameStep;
 int keyCBRsave;
 int keyCBRdiscard;
 
@@ -123,8 +129,29 @@ bool WindowManager::Initialize(void *hwnd, IDirect3DDevice9 *device)
 	keyToggleRoomWindow = Settings::getButtonValue(Settings::settingsIni.toggleOnlineButton);
 	m_pLogger->Log("[system] Online toggling key set to '%s'\n", Settings::settingsIni.toggleOnlineButton.c_str());
 
+	keyToggleOverlay = Settings::getButtonValue(Settings::settingsIni.toggleOverlaybutton);
+	m_pLogger->Log("[system] Overlay toggling key set to '%s'\n", Settings::settingsIni.toggleOverlaybutton.c_str());
+
+	keyToggleLegend = Settings::getButtonValue(Settings::settingsIni.toggleLegendbutton);
+	m_pLogger->Log("[system] Frame meter legend toggling key set to '%s'\n", Settings::settingsIni.toggleLegendbutton.c_str());
+
+	keyToggleHSD = Settings::getButtonValue(Settings::settingsIni.toggleHSDbutton);
+	m_pLogger->Log("[system] HSD toggling key set to '%s'\n", Settings::settingsIni.toggleHSDbutton.c_str());
+
+	keyToggleFM = Settings::getButtonValue(Settings::settingsIni.toggleFMbutton);
+	m_pLogger->Log("[system] Frame meter toggling key set to '%s'\n", Settings::settingsIni.toggleFMbutton.c_str());
+
+	keyPauseGame = Settings::getButtonValue(Settings::settingsIni.toggleGamePausebutton);
+	m_pLogger->Log("[system] Game pause toggling key set to '%s'\n", Settings::settingsIni.toggleGamePausebutton.c_str());
+
+	keyFrameStep = Settings::getButtonValue(Settings::settingsIni.frameStepbutton);
+	m_pLogger->Log("[system] Frame step toggling key set to '%s'\n", Settings::settingsIni.frameStepbutton.c_str());
+
 	keyCBRsave = Settings::getButtonValue(Settings::settingsIni.saveCBRbutton);
+	m_pLogger->Log("[system] Save CBR replay key set to '%s'\n", Settings::settingsIni.saveCBRbutton.c_str());
+
 	keyCBRdiscard = Settings::getButtonValue(Settings::settingsIni.discardCBRbutton);
+	m_pLogger->Log("[system] Discard CBR replay key set to '%s'\n", Settings::settingsIni.discardCBRbutton.c_str());
 
 	// Load custom palettes
 
@@ -246,19 +273,45 @@ void WindowManager::Render()
 void WindowManager::HandleButtons()
 {
 	if (!m_initialized)
-	{
 		return;
-	}
 
 	if (ImGui::IsKeyPressed(keyToggleMainWindow))
-	{
 		m_windowContainer->GetWindow(WindowType_Main)->ToggleOpen();
-	}
+	
 	
 	if (ImGui::IsKeyPressed(keyToggleRoomWindow))
-	{
 		m_windowContainer->GetWindow(WindowType_Room)->ToggleOpen();
+
+	if (ImGui::IsKeyPressed(keyToggleOverlay))
+	{
+		g_interfaces.frameMeterInterface.isOpen = !g_interfaces.frameMeterInterface.isOpen;
+		if (g_interfaces.frameMeterInterface.isOpen)
+		{
+			m_windowContainer->GetWindow(WindowType_HitboxOverlay)->Open();
+		}
+		else
+		{
+			if (!g_interfaces.cbrInterface.netaOpen)
+				g_gameVals.isFrameFrozen = false;
+			m_windowContainer->GetWindow(WindowType_HitboxOverlay)->Close();
+		}
 	}
+
+	if (g_interfaces.frameMeterInterface.isOpen && ImGui::IsKeyPressed(keyToggleLegend))
+		g_interfaces.frameMeterInterface.settings.DisplayFrameMeterLegend = !g_interfaces.frameMeterInterface.settings.DisplayFrameMeterLegend;
+
+	if (g_interfaces.frameMeterInterface.isOpen && ImGui::IsKeyPressed(keyToggleHSD))
+		g_interfaces.frameMeterInterface.settings.DisplayHSDComboMeters = !g_interfaces.frameMeterInterface.settings.DisplayHSDComboMeters;
+
+	if (g_interfaces.frameMeterInterface.isOpen && ImGui::IsKeyPressed(keyToggleFM))
+		g_interfaces.frameMeterInterface.settings.DisplayFrameMeter = !g_interfaces.frameMeterInterface.settings.DisplayFrameMeter;
+
+	if (ImGui::IsKeyPressed(keyPauseGame) && g_gameVals.GetGameMode() != GameMode_ReplayTheater)
+		g_gameVals.isFrameFrozen = !g_gameVals.isFrameFrozen;
+
+	if (g_gameVals.isFrameFrozen && ImGui::IsKeyPressed(keyFrameStep))
+		g_gameVals.framesToReach = *g_gameVals.pframe_count_minus_1_P1 + 1;
+	
 }
 
 void WindowManager::DrawAllWindows() const

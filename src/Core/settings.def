@@ -4,8 +4,14 @@
 
 SETTING_STRING(togglebutton, "ToggleButton", "F1");
 SETTING_STRING(toggleOnlineButton, "ToggleOnlineButton", "F2");
-SETTING_STRING(saveCBRbutton, "SaveCBRbutton", "F8");
-SETTING_STRING(discardCBRbutton, "DiscardCBRbutton", "F9");
+SETTING_STRING(toggleOverlaybutton, "ToggleOverlayButton", "F3");
+SETTING_STRING(toggleLegendbutton, "ToggleFrameMeterLegend", "F4");
+SETTING_STRING(toggleHSDbutton, "ToggleHSDMeters", "F5");
+SETTING_STRING(toggleFMbutton, "ToggleFrameMeter", "F6");
+SETTING_STRING(toggleGamePausebutton, "ToggleGamePause", "F7");
+SETTING_STRING(frameStepbutton, "FrameStep", "F8");
+SETTING_STRING(saveCBRbutton, "SaveCBRbutton", "F9");
+SETTING_STRING(discardCBRbutton, "DiscardCBRbutton", "F10");
 SETTING_INT(renderwidth, "RenderingWidth", "1920");
 SETTING_INT(renderheight, "RenderingHeight", "1080");
 SETTING_INT(menusize, "MenuSize", "2");

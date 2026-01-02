@@ -58,6 +58,7 @@ void MainWindow::Draw()
 {
 	ImGui::Text("Toggle me with %s", Settings::settingsIni.togglebutton.c_str());
 	ImGui::Text("Toggle Online with %s", Settings::settingsIni.toggleOnlineButton.c_str());
+	ImGui::Text("Toggle Overlay with %s", Settings::settingsIni.toggleOverlaybutton.c_str());
 	ImGui::Separator();
 	
 #ifdef _DEBUG
@@ -159,8 +160,6 @@ void MainWindow::DrawHitboxOverlaySection() const
 	if (!ImGui::CollapsingHeader("Game overlay"))
 		return;
 
-	static bool isOpen = false;
-
 	if (!isHitboxOverlayEnabledInCurrentState())
 	{
 		ImGui::HorizontalSpacing();
@@ -169,9 +168,9 @@ void MainWindow::DrawHitboxOverlaySection() const
 	}
 	else {
 		ImGui::HorizontalSpacing();
-		if (ImGui::Checkbox("Enable", &isOpen))
+		if (ImGui::Checkbox("Enable", &g_interfaces.frameMeterInterface.isOpen))
 		{
-			if (isOpen)
+			if (g_interfaces.frameMeterInterface.isOpen)
 			{
 				m_pWindowContainer->GetWindow(WindowType_HitboxOverlay)->Open();
 			}
@@ -183,7 +182,7 @@ void MainWindow::DrawHitboxOverlaySection() const
 			}
 		}
 
-		if (isOpen)
+		if (g_interfaces.frameMeterInterface.isOpen)
 		{
 			ImGui::VerticalSpacing(10);
 

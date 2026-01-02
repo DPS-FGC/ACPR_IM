@@ -76,18 +76,42 @@ bool Settings::loadSettingsFile()
 
 
 	// Set buttons back to default if their values are incorrect
-	if (settingsIni.togglebutton.length() != 2 || settingsIni.togglebutton[0] != 'F')
+	if (checkButton(settingsIni.togglebutton))
 		settingsIni.togglebutton = "F1";
 
-	if (settingsIni.toggleOnlineButton.length() != 2 || settingsIni.toggleOnlineButton[0] != 'F')
+	if (checkButton(settingsIni.toggleOnlineButton))
 		settingsIni.toggleOnlineButton = "F2";
 
-	if (settingsIni.saveCBRbutton.length() != 2 || settingsIni.saveCBRbutton[0] != 'F')
-		settingsIni.saveCBRbutton = "F8";
-	if (settingsIni.discardCBRbutton.length() != 2 || settingsIni.discardCBRbutton[0] != 'F')
-		settingsIni.discardCBRbutton = "F9";
+	if (checkButton(settingsIni.toggleOverlaybutton))
+		settingsIni.toggleOverlaybutton = "F3";
+
+	if (checkButton(settingsIni.toggleLegendbutton))
+		settingsIni.toggleLegendbutton = "F4";
+
+	if (checkButton(settingsIni.toggleHSDbutton))
+		settingsIni.toggleHSDbutton = "F5";
+
+	if (checkButton(settingsIni.toggleFMbutton))
+		settingsIni.toggleFMbutton = "F3";
+
+	if (checkButton(settingsIni.toggleGamePausebutton))
+		settingsIni.toggleGamePausebutton = "F7";
+
+	if (checkButton(settingsIni.frameStepbutton))
+		settingsIni.frameStepbutton = "F8";
+
+	if (checkButton(settingsIni.saveCBRbutton))
+		settingsIni.saveCBRbutton = "F9";
+
+	if (checkButton(settingsIni.discardCBRbutton))
+		settingsIni.discardCBRbutton = "F10";
 
 	return true;
+}
+
+bool Settings::checkButton(std::string button)
+{
+	return (button.length() != 2 && button.length() != 3) || button[0] != 'F';
 }
 
 void Settings::initSavedSettings()
@@ -122,6 +146,12 @@ short Settings::getButtonValue(std::string button)
 		return 119;
 	if (button == "F9")
 		return 120;
+	if (button == "F10")
+		return 121;
+	if (button == "F11")
+		return 122;
+	if (button == "F12")
+		return 123;
 
 	//default to F1
 	button = "F1";
