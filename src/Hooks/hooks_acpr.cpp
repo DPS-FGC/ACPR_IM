@@ -528,6 +528,10 @@ bool placeHooks_acpr()
 		"x????xxxxx", 5);
 	g_gameVals.pTrainingInfoDisplayStateMenu = (int*)(HookManager::GetBytesFromAddr("GetTrainingInfoDisplayStateMenu", 1, 4) + 0x3C);
 
+	HookManager::RegisterHook("GetTrainingMenuFlags", "\xF6\x05\x00\x00\x00\x00\x02\x0F\x85\xB5\x00\x00\x00",
+		"xx????xxxxxxx", 7);
+	g_gameVals.pTrainingMenuFlags = (byte*)HookManager::GetBytesFromAddr("GetTrainingMenuFlags", 2, 4);
+
 	return true;
 }
 

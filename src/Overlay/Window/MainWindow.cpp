@@ -277,9 +277,17 @@ void MainWindow::DrawHitboxOverlaySection() const
 	ImGui::Checkbox("Draw inifinite height##drawinfheight", &g_interfaces.frameMeterInterface.settings.DrawInfiniteHeight);
 	ImGui::HoverTooltip("If on, draws horizontal proximity boxes along the entire screen.");
 
+	bool disable_hud_clicked = false;
 	g_interfaces.frameMeterInterface.restoreHUD = false;
-	g_interfaces.frameMeterInterface.restoreHUD = g_interfaces.frameMeterInterface.restoreHUD ||
-		ImGui::Checkbox("Disable HUD##disablehud", &g_interfaces.frameMeterInterface.settings.DisableHud);
+	disable_hud_clicked = ImGui::Checkbox("Disable HUD##disablehud", &g_interfaces.frameMeterInterface.settings.DisableHud);
+	g_interfaces.frameMeterInterface.restoreHUD = g_interfaces.frameMeterInterface.restoreHUD || disable_hud_clicked;
+	//If HUD is disabled in training mode before the training mode menu was opened once, it might
+	//not restore the info display to the proper value, because the training mode menu is not initialized yet
+	//In that case, set the relevant variable in the training mode menu manually so it can be restored later
+	if (!(*g_gameVals.pTrainingMenuFlags & 0x02) && 
+		(*g_gameVals.pTrainingInfoDisplayState != *g_gameVals.pTrainingInfoDisplayStateMenu) &&
+		disable_hud_clicked && g_interfaces.frameMeterInterface.settings.DisableHud)
+		*g_gameVals.pTrainingInfoDisplayStateMenu = *g_gameVals.pTrainingInfoDisplayState;
 	g_interfaces.frameMeterInterface.restoreHUD = g_interfaces.frameMeterInterface.restoreHUD &&
 		!g_interfaces.frameMeterInterface.settings.DisableHud;
 	ImGui::HoverTooltip("Disables heads up display.");

@@ -156,13 +156,15 @@ void MatchState::OnUpdate()
 			int bgflags = 0x00000000;
 			if (g_interfaces.frameMeterInterface.settings.DisableHud)
 			{
-				bgflags = bgflags | 0x02;
+				bgflags = bgflags | 0x02; //Disables HUD
 				if (g_gameVals.GetGameMode() == GameMode_Training)
+				{
 					*g_gameVals.pTrainingInfoDisplayState = 0;
+				}
 			}
 
 			if (g_interfaces.frameMeterInterface.settings.DisableBackground)
-				bgflags = bgflags | 0x08;
+				bgflags = bgflags | 0x08; //Sets black background
 
 			if (bgflags)
 				*g_gameVals.pBackgroundState = bgflags;

@@ -203,6 +203,7 @@ struct gameVals_t
 	int* pBackgroundState;
 	int* pTrainingInfoDisplayState;
 	int* pTrainingInfoDisplayStateMenu;
+	byte* pTrainingMenuFlags;
 };
 
 struct gameProc_t
