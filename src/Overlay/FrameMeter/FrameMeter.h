@@ -10,6 +10,7 @@
 #include<Overlay/FrameMeter/Types.h>
 #include<Overlay/FrameMeter/MoveData.h>
 #include<stack>
+#include"Core/Settings.h"
 
 #define METER_LENGTH 80
 #define PAUSE_THRESHOLD 10
@@ -54,16 +55,13 @@ enum SecondaryFrameProperty_
 
 struct FM_Settings
 {
-    bool DisplayHitboxes = true;
-    bool DisplayHSDComboMeters = true;
-    bool DisplayFrameMeter = true;
-    bool AlwaysDrawThrowRange = false;
+    //X-Macro
+#define SETTING_BOOL(_var, _inistring, _defaultval) \
+    bool _var = L##_defaultval;
+#include "overlay.def"
+#undef SETTING_BOOL
+
     bool DisplayFrameMeterLegend = false;
-    bool RecordDuringHitstop = false;
-    bool RecordDuringSuperFlash = false;
-    bool AdvancedMode = false;
-    bool AllowRewindingInReplay = false;
-    bool DrawInfiniteHeight = false;
     bool DisableHud = false;
     bool DisableBackground = false;
 };

@@ -228,6 +228,7 @@
     <ClInclude Include="src\Game\Room\RoomMemberEntry.h" />
     <ClInclude Include="src\Network\Packet.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="src\Overlay\FrameMeter\OverlaySettings.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="export\dinput8.def">
@@ -238,6 +239,9 @@
     </None>
     <None Include="src\Core\settings.def" />
     <None Include="resource\palettes.ini" />
+    <None Include="src\Overlay\FrameMeter\overlay.def" />
+    <None Include="src\Overlay\FrameMeter\overlay_palette.def" />
+    <None Include="src\Overlay\FrameMeter\overlay_misc.def" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="ACPR_IM.rc" />

@@ -1,5 +1,51 @@
 #include "Overlay/FrameMeter/FrameMeterInterface.h"
 #include"Core/interfaces.h"
+#include"Core/Settings.h"
+#include <atlstr.h>
+
+bool FrameMeterInterface::LoadSettings()
+{
+    CString strINIPath;
+
+    _wfullpath((wchar_t*)strINIPath.GetBuffer(MAX_PATH), L"settings.ini", MAX_PATH);
+    strINIPath.ReleaseBuffer();
+
+    if (GetFileAttributes(strINIPath) == 0xFFFFFFFF)
+    {
+        MessageBoxA(NULL, "Settings INI File Was Not Found!", "Error", MB_OK);
+        return false;
+    }
+    //X-Macro
+#define SETTING_BOOL(_var, _inistring, _defaultval) \
+    g_interfaces.frameMeterInterface.settings._var = Settings::readSettingsFilePropertyInt(_T("Overlay"), L##_inistring, L##_defaultval, strINIPath) != 0;
+#include "overlay.def"
+#undef SETTING_BOOL
+
+#define SETTING_ARGB(_var, _inistring, _defaultval) \
+    g_interfaces.frameMeterInterface.palettes._var = Settings::readSettingsFilePropertyUInt(_T("Overlay.Palette"), L##_inistring, L##_defaultval, strINIPath);
+#include "overlay_palette.def"
+#undef SETTING_ARGB
+
+#define SETTING_FLOAT(_var, _inistring, _defaultval) \
+    g_interfaces.frameMeterInterface.misc._var = Settings::readSettingsFilePropertyFloat(_T("Overlay.Misc"), L##_inistring, L##_defaultval, strINIPath);
+#include "overlay_misc.def"
+#undef SETTING_FLOAT
+
+    g_interfaces.frameMeterInterface.misc.rectThickness = max(0.0f, g_interfaces.frameMeterInterface.misc.rectThickness);
+    g_interfaces.frameMeterInterface.misc.rectThickness = min(5.0f, g_interfaces.frameMeterInterface.misc.rectThickness);
+
+    g_interfaces.frameMeterInterface.misc.rectFillTransparency = max(0.0f, g_interfaces.frameMeterInterface.misc.rectFillTransparency);
+    g_interfaces.frameMeterInterface.misc.rectFillTransparency = min(1.0f, g_interfaces.frameMeterInterface.misc.rectFillTransparency);
+
+    g_interfaces.frameMeterInterface.misc.pivotSize = max(0.0, g_interfaces.frameMeterInterface.misc.pivotSize);
+    g_interfaces.frameMeterInterface.misc.pivotThickness = max(0.0, g_interfaces.frameMeterInterface.misc.pivotThickness);
+
+    g_interfaces.frameMeterInterface.misc.hsdMeterXPosition = max(-1.0f, g_interfaces.frameMeterInterface.misc.hsdMeterXPosition);
+    g_interfaces.frameMeterInterface.misc.hsdMeterXPosition = min( 1.0f, g_interfaces.frameMeterInterface.misc.hsdMeterXPosition);
+
+    g_interfaces.frameMeterInterface.misc.hsdMeterYPosition = max(-1.0f, g_interfaces.frameMeterInterface.misc.hsdMeterYPosition);
+    g_interfaces.frameMeterInterface.misc.hsdMeterYPosition = min( 1.0f, g_interfaces.frameMeterInterface.misc.hsdMeterYPosition);
+}
 
 void FrameMeterInterface::Update()
 {
@@ -150,37 +196,37 @@ unsigned int FrameMeterInterface::GetFrameColor(FrameType_ type)
         return 0xFF0F0F0F;
         break;
     case FrameType_Neutral:
-        return 0xFF1B1B1B;
+        return g_interfaces.frameMeterInterface.palettes.colorFM_FrameNeutral;
         break;
     case FrameType_Movement:
-        return 0xFF41F8FC;
+        return g_interfaces.frameMeterInterface.palettes.colorFM_FrameMovement;
         break;
     case FrameType_CounterHitState:
-        return 0xFF01B597;
+        return g_interfaces.frameMeterInterface.palettes.colorFM_FrameCounterHitState;
         break;
     case FrameType_Startup:
-        return 0xFF01B597;
+        return g_interfaces.frameMeterInterface.palettes.colorFM_FrameStartup;
         break;
     case FrameType_Active:
-        return 0xFFCB2B67;
+        return g_interfaces.frameMeterInterface.palettes.colorFM_FrameActive;
         break;
     case FrameType_ActiveThrow:
-        return 0xFFCB2B67;
+        return g_interfaces.frameMeterInterface.palettes.colorFM_FrameActiveThrow;
         break;
     case FrameType_Recovery:
-        return 0xFF006FBC;
+        return g_interfaces.frameMeterInterface.palettes.colorFM_FrameRecovery;
         break;
     case FrameType_BlockStun:
-        return 0xFFC8C800;
+        return g_interfaces.frameMeterInterface.palettes.colorFM_FrameBlockStun;
         break;
     case FrameType_HitStun:
-        return 0xFFC8C800;
+        return g_interfaces.frameMeterInterface.palettes.colorFM_FrameHitstun;
         break;
     case FrameType_TechableHitStun:
-        return 0xFF969600;
+        return g_interfaces.frameMeterInterface.palettes.colorFM_FrameTechableHitstun;
         break;
     case FrameType_KnockDownHitStun:
-        return 0xFF969600;
+        return g_interfaces.frameMeterInterface.palettes.colorFM_FrameKnockDownHitstun;
         break;
 	}
     return 0x00000000;
@@ -194,23 +240,31 @@ unsigned int FrameMeterInterface::GetPrimaryPropertyColor(PrimaryFrameProperty_ 
         return 0xFF000000;
         break;
     case PrimaryFrameProperty_SlashBack:
-        return 0xFFFF0000;
+        return g_interfaces.frameMeterInterface.palettes.colorFM_PrimarySlashback;
         break;
     case PrimaryFrameProperty_InvulnFull:
-        return 0xFFFFFFFF;
+        return g_interfaces.frameMeterInterface.palettes.colorFM_PrimaryInvulnFull;
         break;
     case PrimaryFrameProperty_InvulnThrow:
-        return 0xFFFF7D00;
+        return g_interfaces.frameMeterInterface.palettes.colorFM_PrimaryInvulnThrow;
         break;
     case PrimaryFrameProperty_InvulnStrike:
-        return 0xFF007DFF;
+        return g_interfaces.frameMeterInterface.palettes.colorFM_PrimaryInvulnStrike;
         break;
     case PrimaryFrameProperty_Armor:
+        return g_interfaces.frameMeterInterface.palettes.colorFM_PrimaryArmor;
+        break;
     case PrimaryFrameProperty_Parry:
+        return g_interfaces.frameMeterInterface.palettes.colorFM_PrimaryParry;
+        break;
     case PrimaryFrameProperty_GuardPointFull:
+        return g_interfaces.frameMeterInterface.palettes.colorFM_PrimaryGuardPointFull;
+        break;
     case PrimaryFrameProperty_GuardPointHigh:
+        return g_interfaces.frameMeterInterface.palettes.colorFM_PrimaryGuardPointHigh;
+        break;
     case PrimaryFrameProperty_GuardPointLow:
-        return 0xFF785000;
+        return g_interfaces.frameMeterInterface.palettes.colorFM_PrimaryGuardPointLow;
         break;
     case PrimaryFrameProperty_TEST:
         return 0xFFFFFF00;
@@ -227,7 +281,7 @@ unsigned int FrameMeterInterface::GetSecondaryPropertyColor(SecondaryFrameProper
         return 0xFF000000;
         break;
     case SecondaryFrameProperty_FRC:
-        return 0xFFFFFF00;
+        return g_interfaces.frameMeterInterface.palettes.colorFM_SecondaryFRC;
         break;
     }
     return 0x00000000;

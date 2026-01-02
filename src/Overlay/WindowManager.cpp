@@ -156,6 +156,7 @@ bool WindowManager::Initialize(void *hwnd, IDirect3DDevice9 *device)
 	// Load custom palettes
 
 	g_interfaces.pPaletteManager->LoadAllPalettes();
+	g_interfaces.frameMeterInterface.LoadSettings();
 
 	// Calling a frame to initialize beforehand to prevent a crash upon first call of Update() if the game window is not focused.
 	// Simply calling ImGui_ImplDX9_CreateDeviceObjects() might be enough too

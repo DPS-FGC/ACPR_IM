@@ -160,7 +160,7 @@ void HitboxOverlay::DrawFrameMeter()
 	const unsigned int rectBorderColor = 0xFF000000;
 	RenderRect(pointA, pointB, pointC, pointD, rectBorderColor, borderThickness);
 
-	const unsigned char transparency = 0xFF * m_rectFillTransparency;
+	const unsigned char transparency = 0xFF * g_interfaces.frameMeterInterface.misc.rectFillTransparency;
 	unsigned int clearedTransparencyBits = (rectBorderColor & ~0xFF000000);
 	unsigned int transparencyPercentage = ((int)transparency << 24) & 0xFF000000;
 	const unsigned int rectFillColor = clearedTransparencyBits | transparencyPercentage;
@@ -431,11 +431,9 @@ void HitboxOverlay::DrawFrameMeterLegend()
 	}
 }
 
-#define HSD_METER_X -0.95f
-#define HSD_METER_Y 0.1f
+
 #define HSD_METER_W 0.05f
 #define HSD_METER_H 0.4f
-#define UNTECH_METER_COLOR 0xFF00FFFF
 #define HSD_THRESHOLD_1 (18.0f / 86.0f)
 #define HSD_THRESHOLD_2 (30.0f / 86.0f)
 #define HSD_THRESHOLD_3 (42.0f / 86.0f)
@@ -462,8 +460,8 @@ void HitboxOverlay::DrawComboTimeMeter(const CharData* charObj)
 	float f1 = 1 - 2 * charObj->playerID;
 	float f2 = -0.05f * charObj->playerID;
 
-	float meterX = windowWidth / 2.0 + (HSD_METER_X * f1 + f2) * 0.5f * screenWidth;
-	float meterY = windowHeight / 2.0 - HSD_METER_Y * 0.5f * screenHeight;
+	float meterX = windowWidth / 2.0 + (g_interfaces.frameMeterInterface.misc.hsdMeterXPosition * f1 + f2) * 0.5f * screenWidth;
+	float meterY = windowHeight / 2.0 - g_interfaces.frameMeterInterface.misc.hsdMeterYPosition * 0.5f * screenHeight;
 	float meterW = HSD_METER_W * 0.5 * screenWidth;
 	float meterH = HSD_METER_H * 0.5 * screenHeight;
 
@@ -475,7 +473,7 @@ void HitboxOverlay::DrawComboTimeMeter(const CharData* charObj)
 	const unsigned int rectBorderColor = 0xFF000000;
 	RenderRect(pointA, pointB, pointC, pointD, rectBorderColor, borderThickness);
 
-	const unsigned char transparency = 0xFF * m_rectFillTransparency;
+	const unsigned char transparency = 0xFF * g_interfaces.frameMeterInterface.misc.rectFillTransparency;
 	unsigned int clearedTransparencyBits = (rectBorderColor & ~0xFF000000);
 	unsigned int transparencyPercentage = ((int)transparency << 24) & 0xFF000000;
 	const unsigned int rectFillColor = clearedTransparencyBits | transparencyPercentage;
@@ -535,8 +533,8 @@ void HitboxOverlay::DrawUntechTimeMeter(const CharData* charObj)
 	float f1 = 1 - 2 * charObj->playerID;
 	float f2 = -0.05f * charObj->playerID;
 
-	float meterX = windowWidth / 2.0 + ((HSD_METER_X + 0.1f) * f1 + f2) * 0.5f * screenWidth;
-	float meterY = windowHeight / 2.0 - HSD_METER_Y * 0.5f * screenHeight;
+	float meterX = windowWidth / 2.0 + ((g_interfaces.frameMeterInterface.misc.hsdMeterXPosition + 0.1f) * f1 + f2) * 0.5f * screenWidth;
+	float meterY = windowHeight / 2.0 - g_interfaces.frameMeterInterface.misc.hsdMeterYPosition * 0.5f * screenHeight;
 	float meterW = HSD_METER_W * 0.5 * screenWidth;
 	float meterH = HSD_METER_H * 0.5 * screenHeight;
 
@@ -548,7 +546,7 @@ void HitboxOverlay::DrawUntechTimeMeter(const CharData* charObj)
 	const unsigned int rectBorderColor = 0xFF000000;
 	RenderRect(pointA, pointB, pointC, pointD, rectBorderColor, borderThickness);
 
-	const unsigned char transparency = 0xFF * m_rectFillTransparency;
+	const unsigned char transparency = 0xFF * g_interfaces.frameMeterInterface.misc.rectFillTransparency;
 	unsigned int clearedTransparencyBits = (rectBorderColor & ~0xFF000000);
 	unsigned int transparencyPercentage = ((int)transparency << 24) & 0xFF000000;
 	const unsigned int rectFillColor = clearedTransparencyBits | transparencyPercentage;
@@ -563,7 +561,7 @@ void HitboxOverlay::DrawUntechTimeMeter(const CharData* charObj)
 		pointC = ImVec2(meterX + meterW, meterY);
 		pointD = ImVec2(meterX, meterY);
 
-		RenderRectFilled(pointA, pointB, pointC, pointD, UNTECH_METER_COLOR);
+		RenderRectFilled(pointA, pointB, pointC, pointD, g_interfaces.frameMeterInterface.palettes.colorHSD_UntechMeterColor);
 	}
 
 }
@@ -647,20 +645,17 @@ void HitboxOverlay::DrawOriginLine(ImVec2 worldPos, float rotationRad)
 	RenderLine(verticalFrom, verticalTo, colorOrange, 3);
 }
 
-#define PIVOTLENGTH 15
-#define PIVOTTHICKNESS 3.0f
-#define PIVOTCOLOR 0xFF800080
 void HitboxOverlay::DrawPivot(const CharData* charObj)
 {
 	ImVec2 origin = CalculateScreenPosition(ImVec2(charObj->posX, charObj->posY));
 
-	ImVec2 start = ImVec2(origin.x - PIVOTLENGTH, origin.y);
-	ImVec2 end = ImVec2(origin.x + PIVOTLENGTH, origin.y);
-	RenderLine(start, end, PIVOTCOLOR, PIVOTTHICKNESS);
+	ImVec2 start = ImVec2(origin.x - g_interfaces.frameMeterInterface.misc.pivotSize, origin.y);
+	ImVec2 end = ImVec2(origin.x + g_interfaces.frameMeterInterface.misc.pivotSize, origin.y);
+	RenderLine(start, end, g_interfaces.frameMeterInterface.palettes.colorHitbox_Pivot, g_interfaces.frameMeterInterface.misc.pivotThickness);
 
-	start = ImVec2(origin.x, origin.y - PIVOTLENGTH);
-	end = ImVec2(origin.x, origin.y + PIVOTLENGTH);
-	RenderLine(start, end, PIVOTCOLOR, PIVOTTHICKNESS);
+	start = ImVec2(origin.x, origin.y - g_interfaces.frameMeterInterface.misc.pivotSize);
+	end = ImVec2(origin.x, origin.y + g_interfaces.frameMeterInterface.misc.pivotSize);
+	RenderLine(start, end, g_interfaces.frameMeterInterface.palettes.colorHitbox_Pivot, g_interfaces.frameMeterInterface.misc.pivotThickness);
 }
 
 Hitbox HitboxOverlay::ScaleHitbox(const Hitbox* hitbox, const CharData* p)
@@ -702,14 +697,15 @@ void HitboxOverlay::DrawHitbox(Hitbox* drawbox, const CharData* charObj, const u
 	pointC = CalculateScreenPosition(pointC);
 	pointD = CalculateScreenPosition(pointD);
 
-	pointA = ImVec2(pointA.x + m_rectThickness / 2.0, pointA.y + m_rectThickness / 2.0);
-	pointB = ImVec2(pointB.x - m_rectThickness / 2.0, pointB.y + m_rectThickness / 2.0);
-	pointC = ImVec2(pointC.x - m_rectThickness / 2.0, pointC.y - m_rectThickness / 2.0);
-	pointD = ImVec2(pointD.x + m_rectThickness / 2.0, pointD.y - m_rectThickness / 2.0);
+	float rectThickness = g_interfaces.frameMeterInterface.misc.rectThickness;
+	pointA = ImVec2(pointA.x + rectThickness / 2.0, pointA.y + rectThickness / 2.0);
+	pointB = ImVec2(pointB.x - rectThickness / 2.0, pointB.y + rectThickness / 2.0);
+	pointC = ImVec2(pointC.x - rectThickness / 2.0, pointC.y - rectThickness / 2.0);
+	pointD = ImVec2(pointD.x + rectThickness / 2.0, pointD.y - rectThickness / 2.0);
 
-	RenderRect(pointA, pointB, pointC, pointD, rectBorderColor, m_rectThickness);
+	RenderRect(pointA, pointB, pointC, pointD, rectBorderColor, rectThickness);
 
-	const unsigned char transparency = 0xFF * m_rectFillTransparency;
+	const unsigned char transparency = 0xFF * g_interfaces.frameMeterInterface.misc.rectFillTransparency;
 	unsigned int clearedTransparencyBits = (rectBorderColor & ~0xFF000000);
 	unsigned int transparencyPercentage = ((int)transparency << 24) & 0xFF000000;
 	const unsigned int rectFillColor = clearedTransparencyBits | transparencyPercentage;
@@ -719,9 +715,6 @@ void HitboxOverlay::DrawHitbox(Hitbox* drawbox, const CharData* charObj, const u
 void HitboxOverlay::DrawCollisionAreas(const CharData* charObj, const ImVec2 playerWorldPos)
 {
 	std::vector<Hitbox> entries = HitboxReader::getHitboxes(charObj);
-
-	const unsigned int colorGreen = 0xFF00FF00;
-	const unsigned int colorRed = 0xFFFF0000;
 
 	int index = -1;
 	for (const Hitbox &entry : entries)
@@ -765,7 +758,9 @@ void HitboxOverlay::DrawCollisionAreas(const CharData* charObj, const ImVec2 pla
 			drawbox = ScaleHitbox(extra, charObj);
 		}
 	
-		const unsigned int rectBorderColor = entry.type == HitboxType_Hurtbox ? colorGreen : colorRed;
+		const unsigned int rectBorderColor = entry.type == 
+			HitboxType_Hurtbox ? g_interfaces.frameMeterInterface.palettes.colorHitbox_Hurtbox :
+			g_interfaces.frameMeterInterface.palettes.colorHitbox_Hitbox;
 
 		DrawHitbox(&drawbox, charObj, rectBorderColor);
 
@@ -778,7 +773,7 @@ void HitboxOverlay::DrawCollisionAreas(const CharData* charObj, const ImVec2 pla
 		charObj->hitboxExtraArray != NULL)
 	{
 		Hitbox drawbox = ScaleHitbox((Hitbox*)charObj->hitboxExtraArray, charObj);
-		DrawHitbox(&drawbox, charObj, colorRed);
+		DrawHitbox(&drawbox, charObj, g_interfaces.frameMeterInterface.palettes.colorHitbox_Hitbox);
 	}
 
 	if (drawOriginLine)
@@ -916,7 +911,7 @@ bool HitboxOverlay::GetProximityBoxEntity(const CharData* charObj, Hitbox& box)
 	if (charObj == NULL)
 		return false;
 
-	auto halfHeight = m_rectThickness * 150.0f;
+	auto halfHeight = g_interfaces.frameMeterInterface.misc.rectThickness * 150.0f;
 
 	if (charObj->charIndex == ROBO_KY_MAT_ID && charObj->actId == 13)
 	{
@@ -985,8 +980,8 @@ void HitboxOverlay::DrawProximityBoxes(const CharData* charObj, bool isPlayer)
 	Hitbox rangebox;
 	Hitbox drawbox;
 
-	const unsigned int colorProximityPlayer = 0x80FF00FF;
-	const unsigned int colorProximityEntity = 0x80FF8000;
+	const unsigned int colorProximityPlayer = g_interfaces.frameMeterInterface.palettes.colorHitbox_MiscPushRange;
+	const unsigned int colorProximityEntity = g_interfaces.frameMeterInterface.palettes.colorHitbox_MiscPivotRange;
 
 	if (isPlayer)
 	{
@@ -1007,7 +1002,7 @@ void HitboxOverlay::DrawCleanHitBox(const CharData* charObj)
 	Hitbox clbox = GetCLRect(charObj);
 	Hitbox drawbox = ScaleHitbox(&clbox, charObj);
 
-	const unsigned int colorCL = 0x80FF8000;
+	const unsigned int colorCL = g_interfaces.frameMeterInterface.palettes.colorHitbox_CleanHit;
 
 	DrawHitbox(&drawbox, charObj, colorCL);
 
@@ -1094,7 +1089,7 @@ void HitboxOverlay::DrawPlayerGrabBox(const CharData* charObj, bool drawOverride
 		Hitbox throwBox = GetPlayerThrowBox(charObj);
 		Hitbox drawbox = ScaleHitbox(&throwBox, charObj);
 
-		const unsigned int colorGrab = 0xFFFF00FF;
+		const unsigned int colorGrab = g_interfaces.frameMeterInterface.palettes.colorHitbox_Grabbox;
 
 		DrawHitbox(&drawbox, charObj, colorGrab);
 	}
@@ -1117,7 +1112,7 @@ bool HitboxOverlay::DrawPlayerCommandGrabBox(const CharData* charObj)
 
 		Hitbox drawbox = ScaleHitbox(&cmdThrowHitboxRep, charObj);
 		
-		const unsigned int colorGrab = 0xFFFF00FF;
+		const unsigned int colorGrab = g_interfaces.frameMeterInterface.palettes.colorHitbox_Grabbox;
 
 		DrawHitbox(&drawbox, charObj, colorGrab);
 		return true;
@@ -1132,12 +1127,12 @@ float& HitboxOverlay::GetScale()
 
 void HitboxOverlay::DrawRectThicknessSlider()
 {
-	ImGui::SliderFloat("Border thickness", &m_rectThickness, 0.0f, 5.0f, "%.1f");
+	ImGui::SliderFloat("Border thickness", &g_interfaces.frameMeterInterface.misc.rectThickness, 0.0f, 5.0f, "%.1f");
 }
 
 void HitboxOverlay::DrawRectFillTransparencySlider()
 {
-	ImGui::SliderFloat("Fill transparency", &m_rectFillTransparency, 0.0f, 1.0f, "%.2f");
+	ImGui::SliderFloat("Fill transparency", &g_interfaces.frameMeterInterface.misc.rectFillTransparency, 0.0f, 1.0f, "%.2f");
 }
 
 void HitboxOverlay::RenderLine(const ImVec2& from, const ImVec2& to, uint32_t color, float thickness)

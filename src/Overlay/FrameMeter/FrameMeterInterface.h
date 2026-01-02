@@ -1,5 +1,6 @@
 #pragma once
 #include"Overlay/FrameMeter/FrameMeter.h"
+#include"Overlay/FrameMeter/OverlaySettings.h"
 
 struct LegendEntry
 {
@@ -16,6 +17,8 @@ class FrameMeterInterface
 public:
     FrameMeter frameMeter;
     FM_Settings settings;
+    OverlayMiscSettings misc;
+    OverlayPalettes palettes;
     bool restoreBackground = false;
     bool restoreHUD = false;
     bool isOpen = false;
@@ -35,6 +38,8 @@ public:
         LegendEntry(FM_Frame(FrameType_None, PrimaryFrameProperty_SlashBack), "Slashback"),
         LegendEntry(FM_Frame(FrameType_None, PrimaryFrameProperty_Default, PrimaryFrameProperty_Default, SecondaryFrameProperty_FRC), "FRC")
     };
+
+    bool LoadSettings();
 
     unsigned int GetFrameColor(FrameType_ type);
     unsigned int GetPrimaryPropertyColor(PrimaryFrameProperty_ prop);

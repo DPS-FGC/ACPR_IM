@@ -1,0 +1,38 @@
+// X-Macro file for settings.ini definitions overlay settings
+// Warning: std::string types must be handled separately in code when printing.
+// format: (cname, ininame, default value)
+
+SETTING_ARGB(colorHitbox_Hitbox,         "Color_Hitbox",         "0xFFFF0000");
+SETTING_ARGB(colorHitbox_Hurtbox,        "Color_Hurtbox",        "0xFF00FF00");
+SETTING_ARGB(colorHitbox_Pushbox,        "Color_Pushbox",        "0xFF00FFFF");
+SETTING_ARGB(colorHitbox_Grabbox,        "Color_Grabbox",        "0xFFFF00FF");
+SETTING_ARGB(colorHitbox_CleanHit,       "Color_CleanHit",       "0xFFFF8000");
+SETTING_ARGB(colorHitbox_MiscPushRange,  "Color_MiscPushRange",  "0xFFFF00FF");
+SETTING_ARGB(colorHitbox_MiscPivotRange, "Color_MiscPivotRange", "0xFFFF8000");
+SETTING_ARGB(colorHitbox_Pivot,          "Color_Pivot",          "0xFF800080");
+
+SETTING_ARGB(colorFM_FrameNeutral,          "Color_Neutral",          "0xFF1B1B1B");
+SETTING_ARGB(colorFM_FrameMovement,         "Color_Movement",         "0xFF41F8FC");
+SETTING_ARGB(colorFM_FrameCounterHitState,         "Color_CounterHitState",  "0xFF01B597");
+SETTING_ARGB(colorFM_FrameStartup,          "Color_Startup",          "0xFF01B597");
+SETTING_ARGB(colorFM_FrameActive,           "Color_Active",           "0xFFCB2B67");
+SETTING_ARGB(colorFM_FrameActiveThrow,      "Color_ActiveThrow",      "0xFFCB2B67");
+SETTING_ARGB(colorFM_FrameRecovery,         "Color_Recovery",         "0xFF006FBC");
+SETTING_ARGB(colorFM_FrameBlockStun,        "Color_BlockStun",        "0xFFC8C800");
+SETTING_ARGB(colorFM_FrameHitstun,          "Color_HitStun",          "0xFFC8C800");
+SETTING_ARGB(colorFM_FrameTechableHitstun,  "Color_TechableHitstun",  "0xFF969600");
+SETTING_ARGB(colorFM_FrameKnockDownHitstun, "Color_KnockDownHitstun", "0xFF969600");
+
+SETTING_ARGB(colorFM_PrimaryInvulnFull,     "Color_InvulnFull",     "0xFFFFFFFF");
+SETTING_ARGB(colorFM_PrimaryInvulnStrike,   "Color_InvulnStrike",   "0xFF0080FF");
+SETTING_ARGB(colorFM_PrimaryInvulnThrow,    "Color_InvulnThrow",    "0xFFFF8000");
+SETTING_ARGB(colorFM_PrimaryParry,          "Color_Parry",          "0xFF785000");
+SETTING_ARGB(colorFM_PrimaryGuardPointFull, "Color_GuardPointFull", "0xFF785000");
+SETTING_ARGB(colorFM_PrimaryGuardPointHigh, "Color_GuardPointHigh", "0xFF785000");
+SETTING_ARGB(colorFM_PrimaryGuardPointLow,  "Color_GuardPointLow",  "0xFF785000");
+SETTING_ARGB(colorFM_PrimaryArmor,          "Color_Armor",          "0xFF785000");
+SETTING_ARGB(colorFM_PrimarySlashback,      "Color_SlashBack",      "0xFFFF0000");
+
+SETTING_ARGB(colorFM_SecondaryFRC, "Color_FRC", "0xFFFFFF00");
+
+SETTING_ARGB(colorHSD_UntechMeterColor, "UntechMeterColor", "0xFF00FFFF");

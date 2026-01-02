@@ -1,0 +1,10 @@
+// X-Macro file for settings.ini definitions overlay settings
+// Warning: std::string types must be handled separately in code when printing.
+// format: (cname, ininame, default value)
+
+SETTING_FLOAT(rectThickness, "BorderThickness", "2.5");
+SETTING_FLOAT(rectFillTransparency, "FillTransparency", "0.5");
+SETTING_FLOAT(pivotSize, "PivotSize", "15");
+SETTING_FLOAT(pivotThickness, "PivotThickness", "3");
+SETTING_FLOAT(hsdMeterXPosition, "HSDMeterXPosition", "-0.95");
+SETTING_FLOAT(hsdMeterYPosition, "HSDMeterYPosition", "0.1");

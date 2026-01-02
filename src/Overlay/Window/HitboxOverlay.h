@@ -74,8 +74,6 @@ private:
 
 	// Literally a magic number as of now
 	float m_scale = 0.346f;
-	float m_rectThickness = 2.5f;
-	float m_rectFillTransparency = 0.5f;
 
 	ImGuiWindowFlags m_overlayWindowFlags = ImGuiWindowFlags_NoTitleBar
 		| ImGuiWindowFlags_NoInputs

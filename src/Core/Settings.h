@@ -46,9 +46,11 @@ public:
 	static void initSavedSettings();
 	//static void setViewportSize(D3DVIEWPORT9 Viewport);
 	static short getButtonValue(std::string button);
+	static int findNextFree(bool used[], int n);
 	static bool checkButton(std::string button);
-private:
-	static int readSettingsFilePropertyInt(LPCWSTR key, LPCWSTR defaultVal, LPCWSTR filename);
-	static float readSettingsFilePropertyFloat(LPCWSTR key, LPCWSTR defaultVal, LPCWSTR filename);
-	static std::string readSettingsFilePropertyString(LPCWSTR key, LPCWSTR defaultVal, LPCWSTR filename);
+
+	static int readSettingsFilePropertyInt(LPCWSTR section, LPCWSTR key, LPCWSTR defaultVal, LPCWSTR filename);
+	static unsigned int readSettingsFilePropertyUInt(LPCWSTR section, LPCWSTR key, LPCWSTR defaultVal, LPCWSTR filename);
+	static float readSettingsFilePropertyFloat(LPCWSTR section, LPCWSTR key, LPCWSTR defaultVal, LPCWSTR filename);
+	static std::string readSettingsFilePropertyString(LPCWSTR section, LPCWSTR key, LPCWSTR defaultVal, LPCWSTR filename);
 };

@@ -1,0 +1,11 @@
+// X-Macro file for settings.ini definitions overlay settings
+// Warning: std::string types must be handled separately in code when printing.
+// format: (cname, ininame, default value)
+
+SETTING_BOOL(DisplayHSDComboMeters, "DisplayHSDMeter", "1");
+SETTING_BOOL(DisplayFrameMeter, "DisplayFrameMeter", "1");
+SETTING_BOOL(AlwaysDrawThrowRange, "AlwaysDrawThrowRange", "0");
+SETTING_BOOL(RecordDuringHitstop, "RecordDuringHitstop", "0");
+SETTING_BOOL(RecordDuringSuperFlash, "RecordDuringSuperflash", "0");
+SETTING_BOOL(AllowRewindingInReplay, "AllowRewindingInReplay", "0");
+SETTING_BOOL(DrawInfiniteHeight, "DrawInfiniteHeight", "0");

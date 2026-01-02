@@ -93,6 +93,7 @@
     <ClInclude Include="src\Overlay\FrameMeter\FrameMeterInterface.h" />
     <ClInclude Include="src\Overlay\FrameMeter\MoveData.h" />
     <ClInclude Include="src\Overlay\FrameMeter\Types.h" />
+    <ClInclude Include="src\Overlay\FrameMeter\OverlaySettings.h" />
     <ClInclude Include="src\Palette\impl_templates.h" />
     <ClCompile Include="src\SteamApiWrapper\SteamApiHelper.cpp" />
     <ClCompile Include="src\SteamApiWrapper\SteamNetworkingWrapper.cpp" />
@@ -175,6 +176,9 @@
       <DeploymentContent>false</DeploymentContent>
     </None>
     <None Include="src\Core\settings.def" />
+    <None Include="src\Overlay\FrameMeter\overlay.def" />
+    <None Include="src\Overlay\FrameMeter\overlay_palette.def" />
+    <None Include="src\Overlay\FrameMeter\overlay_misc.def" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="ACPR_IM.rc" />
