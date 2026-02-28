@@ -150,7 +150,7 @@ If the game crashes on launch with the mod make sure:
 	b. Install the latest version of [Visual C++ Runtime](https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist?view=msvc-170).
 
 ## Compiling
-This mod was compiled using Microsoft Visual Studio 2022 (toolset v143).  
+This mod was compiled using Microsoft Visual Studio 2022 (Version 17.13.0, toolset v143).  
 Additional libraries used were [boost (x86)](https://sourceforge.net/projects/boost/files/boost-binaries/1.87.0/) and [openssl (32-bit)](https://slproweb.com/products/Win32OpenSSL.html).
 
 ## Reporting bugs
