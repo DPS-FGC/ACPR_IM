@@ -99,6 +99,8 @@ public:
 
         int caseIndex = tree[y][x].cbrIndex;
         int replayIndex = tree[y][x].cbrReplayIndex;
+        if (replayIndex < 0)
+            return;
         auto caseGamestate = replayFiles[replayIndex].getCase(caseIndex)->getMetadata();
         auto& caseReplay = replayFiles[replayIndex];
         auto caseData = replayFiles[replayIndex].getCase(caseIndex);
